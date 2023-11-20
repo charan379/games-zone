@@ -9,7 +9,7 @@ const GameCard: React.FC<Props> = (props) => {
   const { name } = props;
 
   return (
-    <div className="relative max-w-xs bg-gray-200 border border-gray-200 rounded-lg shadow-sm hover:shadow-lg dark:bg-gray-900 dark:border-gray-900">
+    <div className="relative sm:max-w-md md:max-w-[280px] bg-gray-200 border border-gray-200 rounded-lg shadow-sm hover:shadow-lg dark:bg-gray-900 dark:border-gray-900">
       <div className="w-full h-[80%] rounded-t-lg overflow-hidden">
         <Image
           src="/sports.jpg"

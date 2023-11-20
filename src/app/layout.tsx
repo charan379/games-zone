@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} py-2 md:py-5 px-2 md:px-24 bg-gray-200 dark:bg-gray-900 flex min-h-screen flex-col items-center justify-start gap-2 md:gap-3`}
+        className={`${inter.className} py-2 md:py-5 px-2 bg-gray-200 dark:bg-gray-900 flex min-h-screen flex-col items-center justify-start gap-2 md:gap-3`}
       >
         <>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
