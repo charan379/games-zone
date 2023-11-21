@@ -2,9 +2,9 @@ import React from "react";
 import MenuItem from "./MenuItem";
 import dynamic from "next/dynamic";
 
-const ThemeSwitcher = dynamic(()=> import("@/ui/features/theme/ThemeSwitcher").then(module => module.ThemeSwitcher), {
-    loading: () => <>Theme</>,
-    ssr:false,
+const ThemeSwitcher = dynamic(() => import("@/ui/features/theme/ThemeSwitcher").then(module => module.ThemeSwitcher), {
+  loading: () => <>Theme</>,
+  ssr: false,
 })
 
 const Menu = () => {
@@ -23,9 +23,6 @@ const Menu = () => {
           </li>
         );
       })}
-      <li className="pl-2 md:pl-0">
-        <ThemeSwitcher />
-      </li>
     </ul>
   );
 };
