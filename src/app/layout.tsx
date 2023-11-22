@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/ui/features/theme-provider";
-import Navbar from "@/ui/components/navbar/Navbar";
+import Navbar from "@/ui/features/navbar/Navbar";
+import NextAuthContext from "@/lib/nextauth/NextAuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,13 +23,16 @@ export default function RootLayout({
         className={`${inter.className} py-2 md:py-5 px-2 bg-gray-200 dark:bg-gray-900 flex min-h-screen flex-col items-center justify-start gap-2 md:gap-3`}
       >
         <>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+
+          {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
+          <NextAuthContext>
             <Navbar />
             {/* container */}
             <div className="z-0 w-full min-h-screen p-4 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-md animate-init-bounce">
               {children}
             </div>
-          </ThemeProvider>
+          </NextAuthContext>
+          {/* </ThemeProvider> */}
         </>
       </body>
     </html>

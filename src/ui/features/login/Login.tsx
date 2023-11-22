@@ -2,12 +2,17 @@
 
 import React, { useState } from 'react'
 import { signIn } from "next-auth/react"
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const Login: React.FC = () => {
 
     const [credentials, setCredentials] = useState({ userName: "", password: "" });
 
     const [errors, setErrors] = useState("");
+
+    const router = useRouter();
+
+    const searchParams = useSearchParams();
 
     const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -31,11 +36,19 @@ const Login: React.FC = () => {
             })
 
             if (response?.ok) {
+                console.log(response)
+                if (searchParams.has("callbackUrl")) {
+                    router.push(searchParams.get('callbackUrl') as string);
+                }
                 return;
             }
 
             if (response?.error) {
-                console.log(response.error)
+                try {
+                    setErrors(JSON.parse(response?.error)?.errorMessage)
+                } catch (error) {
+                    setErrors("Somthing went wrong !")
+                }
                 return;
             }
         } catch (error) {

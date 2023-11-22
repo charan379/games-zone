@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Hamburger from "./Hamburger";
-import { Logo } from "./Logo";
+import Hamburger from "../../components/navbar/Hamburger";
+import { Logo } from "../../components/navbar/Logo";
 import Menu from "./Menu";
 import { useScroll } from "@/lib/hooks/useScroll";
 
