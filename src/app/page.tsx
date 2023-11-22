@@ -1,4 +1,4 @@
-import SearchForm from "@/ui/components/games/Forms/SearchFrom";
+import SearchForm from "@/ui/features/games/Forms/SearchFrom";
 import GameCard from "@/ui/components/games/cards/GameCard";
 
 export default function Home() {
