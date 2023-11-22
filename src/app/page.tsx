@@ -1,6 +1,5 @@
 import SearchForm from "@/ui/components/games/Forms/SearchFrom";
 import GameCard from "@/ui/components/games/cards/GameCard";
-import Login from "@/ui/features/login/Login";
 
 export default function Home() {
   const sports = [
