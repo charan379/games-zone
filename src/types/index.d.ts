@@ -51,6 +51,10 @@ declare type GZResponse<T> = {
     error?: GZError,
 }
 
+declare type GenericResponse = {
+    message: string;
+}
+
 declare type GZRequestArgs<Q, B> = {
     requestQuery?: Q,
     requestBoby?: B,
