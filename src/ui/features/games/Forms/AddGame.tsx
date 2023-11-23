@@ -58,7 +58,7 @@ const AddGame: React.FC<Props> = (props) => {
 
           {/* prettier-ignore */}
           <Button rounded="rounded-md" danger key={`ad-2`} type="button" onClick={close}>
-              Cancel
+              Close
             </Button>
         </div>
       </form>
