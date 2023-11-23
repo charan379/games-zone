@@ -15,6 +15,7 @@ import ModalHOC from "@/ui/components/Modal/ModalHOC";
 import EditIcon from "@/ui/components/common/icons/EditIcon";
 import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditGame from "../Forms/EditGame";
+import DeleteGame from "../Forms/DeleteGame";
 
 const AdminGames = () => {
   const { data: session, status: authStatus } = useSession();
@@ -131,7 +132,13 @@ const AdminGames = () => {
                       >
                         <EditIcon />
                       </Button>
-                      <Button classsName="w-7" title="Delete">
+                      <Button
+                        classsName="w-7"
+                        title="Delete"
+                        // prettier-ignore
+                        onClick={() =>dispatch({type: "DELETE_GAME_MODAL",gamePaylod: game,})
+                        }
+                      >
                         <DeleteIcon />
                       </Button>
                     </div>
@@ -163,6 +170,11 @@ const AdminGames = () => {
       <ModalHOC key={"editGameModal"} show={state.modals.editGame.show}>
         {/* prettier-ignore */}
         <EditGame game={state.modals.editGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+      </ModalHOC>
+
+      <ModalHOC key={"deleteGameModal"} show={state.modals.deleteGame.show}>
+        {/* prettier-ignore */}
+        <DeleteGame game={state.modals.deleteGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} />
       </ModalHOC>
     </>
   );
@@ -228,6 +240,7 @@ interface ComponentState {
   modals: {
     addGame: { show: boolean };
     editGame: { show: boolean; game?: Game };
+    deleteGame: { show: boolean; game?: Game };
   };
   messages: string;
   page: GZPage<Game>;
@@ -239,6 +252,7 @@ const initialState: ComponentState = {
   modals: {
     addGame: { show: false },
     editGame: { show: false },
+    deleteGame: { show: false },
   },
   messages: "",
   page: {
@@ -283,11 +297,15 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
     case "EDIT_GAME_MODAL":
       if(action?.gamePaylod){
         return { ...state, modals: { ...state.modals, editGame: { show: true, game: action.gamePaylod } } };
-      } else {
-        return state;
+      } 
+      return state;
+    case "DELETE_GAME_MODAL":
+      if(action?.gamePaylod){
+        return { ...state, modals: { ...state.modals, deleteGame: { show: true, game: action.gamePaylod } } };
       }
+      return state;
     case "CLOSE_MODALS":
-      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false} } };
+      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false} , deleteGame: {show: false}} };
     case "SET_MESSAGES": 
       return {...state, messages: action?.paylod ?? ""};
     case "SET_PAGE": 
