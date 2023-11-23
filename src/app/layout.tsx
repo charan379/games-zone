@@ -28,7 +28,7 @@ export default function RootLayout({
           <NextAuthContext>
             <Navbar />
             {/* container */}
-            <div className="z-0 w-full min-h-screen p-4 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-md animate-init-bounce">
+            <div className="z-0 w-full min-h-screen p-4 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-md">
               {children}
             </div>
           </NextAuthContext>

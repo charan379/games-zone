@@ -1,25 +1,247 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import DownArrow from "../../../components/common/DownArrow";
-import SearchIcon from "../../../components/common/SearchIcon";
-import TableHeader from "../../../components/common/table/TableHeader";
-import TableRow from "../../../components/common/table/TableRow";
-import TableData from "../../../components/common/table/TableData";
-import Modal from "../../../components/Modal/Modal";
+import React, { useEffect, useReducer } from "react";
 import AddGame from "@/ui/features/games/Forms/AddGame";
 import { useSession } from "next-auth/react";
+import gzRequest from "@/lib/utils/gzRequest";
+import Table from "@/ui/components/table/Table";
+import SelectInput from "@/ui/components/form/SelectInput";
+import TextInput from "@/ui/components/form/TextInput";
+import Button from "@/ui/components/common/Button";
+import TableFooter from "@/ui/components/table/TableFooter";
+import TableHOC from "@/ui/components/table/TableHOC";
+import TableBodyCell from "@/ui/components/table/TableBodyCell";
+import ModalHOC from "@/ui/components/Modal/ModalHOC";
+import EditIcon from "@/ui/components/common/icons/EditIcon";
+import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
+import EditGame from "../Forms/EditGame";
 
 const AdminGames = () => {
   const { data: session, status: authStatus } = useSession();
 
-  const [modalData, SetModalData] = useState({
-    addGameModal: { show: false },
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // prettier-ignore
+  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    event.preventDefault();
+    dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
+  };
+
+  useEffect(() => {
+    if (authStatus === "loading") return () => {};
+
+    const timeOutId = setTimeout(() => {
+      dispatch({ type: "LOADING", paylod: true });
+    }, 150);
+
+    dispatch({ type: "SET_MESSAGES", paylod: "" });
+
+    fetchGames(state.query, session?.auth?.token)
+      .then((res: GZResponse<GZPage<Game>>) => {
+        if (res.ok && res.result) {
+          dispatch({ type: "SET_PAGE", pagePaylod: res.result });
+        } else {
+          dispatch({
+            type: "SET_MESSAGES",
+            paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !",
+          });
+        }
+      })
+      .finally(() => {
+        clearTimeout(timeOutId);
+        setTimeout(() => {
+          dispatch({ type: "LOADING", paylod: false });
+        }, 150);
+      });
+
+    return () => {};
+  }, [state.query, authStatus]);
+
+  return (
+    <>
+      <div className="container mx-auto px-4 sm:px-8">
+        <div className="py-1">
+          <div>
+            <h2 className="text-2xl font-semibold leading-tight">Games</h2>
+          </div>
+          <div className="flex sm:flex-row flex-col justify-between items-center">
+            <div className="my-2 flex sm:flex-row flex-col">
+              <div className="flex flex-row mb-1 sm:mb-0">
+                {/*  */}
+                <SelectInput
+                  lable="Limit"
+                  name="limit"
+                  value={state.query.limit}
+                  options={limitOptions}
+                  onChange={handleQueryChange}
+                  rounded="rounded-l"
+                />
+                {/*  */}
+                <SelectInput
+                  lable="Sort"
+                  name="sort"
+                  value={state.query.sort}
+                  options={sortOptions}
+                  onChange={(e) => handleQueryChange(e)}
+                  rounded=""
+                />
+              </div>
+              {/*  */}
+              <TextInput
+                label="Search"
+                name="query"
+                value={state.query.query}
+                onChange={handleQueryChange}
+                type="Search"
+                rounded="rounded-r"
+              />
+            </div>
+            {/* prettier-ignore  */}
+            <Button rounded="rounded" onClick={() => dispatch({ type: "ADD_GAME_MODAL" })}>
+              New Game +
+            </Button>
+          </div>
+          <TableHOC loading={state.loading}>
+            {/* games table */}
+            <Table
+              render={state.messages ? false : true}
+              headerRows={["ID", "Game Name", "Slots", "Actions"]}
+              bodyRows={state.page?.content?.map((game, index) => {
+                return [
+                  //
+                  <TableBodyCell key={`row-${index}-col-1`}>
+                    <NormalText text={game?.gameId} />
+                  </TableBodyCell>,
+                  //
+                  <TableBodyCell key={`row-${index}-col-2`}>
+                    <NormalText text={game.gameName} />
+                  </TableBodyCell>,
+                  //
+                  <TableBodyCell key={`row-${index}-col-3`}>
+                    <NormalText text={"Slots"} />
+                  </TableBodyCell>,
+                  //
+                  <TableBodyCell key={`row-${index}-col-4`}>
+                    <div className="inline-flex gap-4 w-full items-center justify-start">
+                      <Button
+                        classsName="w-7"
+                        title="Edit"
+                        // prettier-ignore
+                        onClick={() => dispatch({ type: "EDIT_GAME_MODAL", gamePaylod: game })}
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button classsName="w-7" title="Delete">
+                        <DeleteIcon />
+                      </Button>
+                    </div>
+                  </TableBodyCell>,
+                ];
+              })}
+            />
+            <TableFooter
+              messages={state.messages}
+              nextPage={() => dispatch({ type: "NEXT_PAGE" })}
+              prevPage={() => dispatch({ type: "PREV_PAGE" })}
+              entriesCountProps={{
+                pageNumber: state.page.number,
+                pageSize: state.page.size,
+                tableName: "Games",
+                totalElements: state.page.totalElements,
+              }}
+              isFirstPage={state.page.first}
+              isLastPage={state.page.last}
+            />
+          </TableHOC>
+        </div>
+      </div>
+
+      {/* modal */}
+      <ModalHOC key={"addGameModal"} show={state.modals.addGame.show}>
+        <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} />
+      </ModalHOC>
+      <ModalHOC key={"editGameModal"} show={state.modals.editGame.show}>
+        {/* prettier-ignore */}
+        <EditGame game={state.modals.editGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+      </ModalHOC>
+    </>
+  );
+};
+
+export default AdminGames;
+
+const NormalText: React.FC<any> = (props) => {
+  return (
+    <p className="text-gray-900 whitespace-no-wrap">
+      {props?.text ?? "No Data"}
+    </p>
+  );
+};
+
+async function fetchGames(
+  query: GameQuery,
+  authToken?: string
+): Promise<GZResponse<GZPage<Game>>> {
+  return gzRequest<GameQuery, null, GZPage<Game>>({
+    requestMethod: "GET",
+    requestQuery: query,
+    requestUrl: "http://localhost:3333/api/game/search",
+    authToken: authToken,
   });
+}
 
-  const [messages, setMessages] = useState("");
+const limitOptions: { lable: string; value: any }[] = [
+  {
+    lable: "5",
+    value: 5,
+  },
+  {
+    lable: "10",
+    value: 10,
+  },
+  {
+    lable: "20",
+    value: 20,
+  },
+];
 
-  const [pageData, setPageData] = useState({
+const sortOptions: { lable: string; value: any }[] = [
+  {
+    lable: "ID - ASC",
+    value: "gameId.asc",
+  },
+  {
+    lable: "ID - DESC",
+    value: "gameId.desc",
+  },
+  {
+    lable: "Name - ASC",
+    value: "gameName.asc",
+  },
+  {
+    lable: "Name - DESC",
+    value: "gameName.desc",
+  },
+];
+
+interface ComponentState {
+  modals: {
+    addGame: { show: boolean };
+    editGame: { show: boolean; game?: Game };
+  };
+  messages: string;
+  page: GZPage<Game>;
+  query: GameQuery;
+  loading: boolean;
+}
+
+const initialState: ComponentState = {
+  modals: {
+    addGame: { show: false },
+    editGame: { show: false },
+  },
+  messages: "",
+  page: {
     content: [{ gameId: 0, gameName: "", image: "" }],
     last: true,
     totalPages: 0,
@@ -34,215 +256,59 @@ const AdminGames = () => {
     numberOfElements: 0,
     first: true,
     empty: true,
-  });
-
-  const handleQueryChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    event.preventDefault();
-    setFetchQuery({ ...fetchQuery, [event.target.name]: event.target.value });
-  };
-
-  const [fetchQuery, setFetchQuery] = useState({
+  },
+  query: {
     query: "",
     limit: 5,
     include: "",
     pageNo: 0,
-    sort: "",
-  });
-
-  useEffect(() => {
-    setMessages("");
-
-    if (authStatus === "loading") return () => {};
-
-    fetch(
-      `http://localhost:3333/api/game/search?limit=${fetchQuery.limit}&include=${fetchQuery.include}&query=${fetchQuery.query}&pageNo=${fetchQuery.pageNo}&sort=${fetchQuery.sort}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.auth?.token}`,
-        },
-      }
-    )
-      .then(async (res) => {
-        if (res.ok) {
-          setPageData(await res.json());
-          console.log(pageData);
-        } else {
-          const error = await res.json();
-          setMessages(error?.errorMessage);
-        }
-      })
-      .catch((err) => {
-        throw err;
-      })
-      .finally(() => {});
-
-    return () => {};
-  }, [
-    fetchQuery.include,
-    fetchQuery.limit,
-    fetchQuery.pageNo,
-    fetchQuery.query,
-    authStatus,
-  ]);
-
-  return (
-    <>
-      <div className="container mx-auto px-4 sm:px-8">
-        <div className="py-1">
-          <div>
-            <h2 className="text-2xl font-semibold leading-tight">Games</h2>
-          </div>
-          <div className="flex sm:flex-row flex-col justify-between items-center">
-            <div className="my-2 flex sm:flex-row flex-col">
-              <div className="flex flex-row mb-1 sm:mb-0">
-                <div className="relative">
-                  <select
-                    name="limit"
-                    value={fetchQuery.limit}
-                    onChange={(e) => handleQueryChange(e)}
-                    className="appearance-none h-full rounded-l border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                  <DownArrow />
-                </div>
-                <div className="relative">
-                  <select
-                    name="sort"
-                    value={fetchQuery.sort}
-                    onChange={(e) => handleQueryChange(e)}
-                    className="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500"
-                  >
-                    <option value={"id.asc"}>ID - ASC</option>
-                    <option value={"id.desc"}>ID - DESC</option>
-                    <option value={"name.asc"}>NAME - ASC</option>
-                    <option value={"name.desc"}>NAME - DESC</option>
-                  </select>
-                  <DownArrow />
-                </div>
-              </div>
-              <div className="block relative">
-                <SearchIcon />
-                <input
-                  name="query"
-                  value={fetchQuery.query}
-                  onChange={(e) => handleQueryChange(e)}
-                  placeholder="Search"
-                  className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={() =>
-                SetModalData({
-                  ...modalData,
-                  addGameModal: { ...modalData.addGameModal, show: true },
-                })
-              }
-              className="mt-4 font-semibold bg-slate-500 text-white py-2 px-6 rounded-md hover:bg-purple-600"
-            >
-              New Game +
-            </button>
-          </div>
-          <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-            <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
-              {messages ? (
-                <p>{messages}</p>
-              ) : (
-                <table className="min-w-full leading-normal">
-                  <TableHeader rows={["id", "name", "slots", "actions"]} />
-                  <tbody>
-                    {pageData.content.map((game, index) => {
-                      return (
-                        <TableRow key={index}>
-                          <TableData key={1}>
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {game?.gameId ?? ""}
-                            </p>
-                          </TableData>
-                          <TableData key={2}>
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {game?.gameName ?? ""}
-                            </p>
-                          </TableData>
-                          <TableData key={3}>
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              Open Slots
-                            </p>
-                          </TableData>
-                          <TableData key={4}>
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              Actions
-                            </p>
-                          </TableData>
-                        </TableRow>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
-              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-                <span className="text-xs xs:text-sm text-gray-900">
-                  Showing {pageData.number * pageData.size + 1} to{" "}
-                  {Math.min(
-                    (pageData.number + 1) * pageData.size,
-                    pageData.totalElements
-                  )}{" "}
-                  of {pageData.totalElements} Games
-                </span>
-                <div className="inline-flex mt-2 xs:mt-0">
-                  <button
-                    disabled={pageData.first}
-                    onClick={() =>
-                      setFetchQuery({
-                        ...fetchQuery,
-                        pageNo: pageData.number - 1,
-                      })
-                    }
-                    className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l"
-                  >
-                    Prev
-                  </button>
-                  <button
-                    disabled={pageData.last}
-                    onClick={() =>
-                      setFetchQuery({
-                        ...fetchQuery,
-                        pageNo: pageData.number + 1,
-                      })
-                    }
-                    className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* modal */}
-
-      <Modal key={"addGameModal"} show={modalData.addGameModal.show}>
-        <AddGame
-          close={() =>
-            SetModalData({
-              ...modalData,
-              addGameModal: { ...modalData.addGameModal, show: false },
-            })
-          }
-        />
-      </Modal>
-    </>
-  );
+    sort: "gameId.asc",
+  },
+  loading: true,
 };
 
-export default AdminGames;
+interface StateAction {
+  type: string;
+  paylod?: any;
+  pagePaylod?: GZPage<Game>;
+  queryPaylod?: GameQuery;
+  gamePaylod?: Game;
+}
+
+// prettier-ignore
+function reducer(state: ComponentState, action: StateAction): ComponentState {
+  switch (action.type) {
+    case "ADD_GAME_MODAL":
+      return { ...state, modals: { ...state.modals, addGame: { show: true } } };
+    case "EDIT_GAME_MODAL":
+      if(action?.gamePaylod){
+        return { ...state, modals: { ...state.modals, editGame: { show: true, game: action.gamePaylod } } };
+      } else {
+        return state;
+      }
+    case "CLOSE_MODALS":
+      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false} } };
+    case "SET_MESSAGES": 
+      return {...state, messages: action?.paylod ?? ""};
+    case "SET_PAGE": 
+      if(action?.pagePaylod){
+        return {...state, page: action?.pagePaylod};
+      }
+      return {...state};
+    case "SET_QUERY": 
+      if(action?.queryPaylod) {
+        const prevPage = state.query.pageNo;
+        const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
+        return {...state,query: {...state.query, ...action.queryPaylod, pageNo}}
+      }
+      return {...state};
+    case "NEXT_PAGE": 
+      return {...state, query: {...state.query, pageNo: state.query.pageNo + 1}};
+    case "PREV_PAGE": 
+      return {...state, query: {...state.query, pageNo: state.query.pageNo - 1}};
+    case "LOADING":
+      return {...state, loading: action.paylod ?? false};
+    default:
+      return state;
+  }
+}

@@ -9,14 +9,15 @@ import React, { useState } from "react";
 
 interface Props {
   close: () => void;
+  game?: Game;
 }
 
-const AddGame: React.FC<Props> = (props) => {
-  const { close } = props;
+const EditGame: React.FC<Props> = (props) => {
+  const { close, game } = props;
 
   const { data: session, status: authStatus } = useSession();
 
-  const [gameName, setGameName] = useState("");
+  const [gameName, setGameName] = useState(game?.gameName ?? "");
 
   const [messages, setMessages] = useState("");
 
@@ -24,22 +25,23 @@ const AddGame: React.FC<Props> = (props) => {
     event.preventDefault();
     setMessages("");
 
-    addGame({ gameName } as Game, session?.auth?.token)
-      .then((res) => {
-        if (res.ok && res.result) {
-          setMessages(JSON.stringify(res?.result));
-        } else {
-          setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
-        }
-      })
-      .catch((err) => {
-        throw err;
-      })
-      .finally(() => {});
+    if (game?.gameId)
+      editGame(game.gameId, gameName, session?.auth?.token)
+        .then((res) => {
+          if (res.ok && res.result) {
+            setMessages(JSON.stringify(res?.result));
+          } else {
+            setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
+          }
+        })
+        .catch((err) => {
+          throw err;
+        })
+        .finally(() => {});
   };
 
   return (
-    <ModalLayout label="Add new Game">
+    <ModalLayout label={`Edit Game : ${game?.gameId}`}>
       <form className="px-8 py-6" onSubmit={handleSubmit}>
         <TextInput
           label="Game Name"
@@ -67,16 +69,13 @@ const AddGame: React.FC<Props> = (props) => {
   );
 };
 
-export default AddGame;
+export default EditGame;
 
-async function addGame(
-  newGame: Game,
-  authToken?: string
-): Promise<GZResponse<Game>> {
-  return gzRequest<null, Game, Game>({
-    requestMethod: "POST",
-    requestUrl: "http://localhost:3333/api/game/add",
-    requestBoby: newGame,
+// prettier-ignore
+async function editGame(gameId: number, newName: string, authToken?: string): Promise<GZResponse<Game>> {
+  return gzRequest<null, null, Game>({
+    requestMethod: "PUT",
+    requestUrl: `http://localhost:3333/api/game/update/${gameId}/name/${newName}`,
     authToken: authToken,
   });
 }
