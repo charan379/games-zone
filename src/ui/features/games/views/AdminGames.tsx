@@ -124,21 +124,14 @@ const AdminGames = () => {
                   //
                   <TableBodyCell key={`row-${index}-col-4`}>
                     <div className="inline-flex gap-4 w-full items-center justify-start">
-                      <Button
-                        classsName="w-7"
-                        title="Edit"
-                        // prettier-ignore
-                        onClick={() => dispatch({ type: "EDIT_GAME_MODAL", gamePaylod: game })}
-                      >
+                      {/* prettier-ignore */}
+                      <Button classsName="w-7" title="Edit" 
+                        onClick={() => dispatch({ type: "EDIT_GAME_MODAL", gamePaylod: game })}>
                         <EditIcon />
                       </Button>
-                      <Button
-                        classsName="w-7"
-                        title="Delete"
-                        // prettier-ignore
-                        onClick={() =>dispatch({type: "DELETE_GAME_MODAL",gamePaylod: game,})
-                        }
-                      >
+                      {/* prettier-ignore */}
+                      <Button classsName="w-7" title="Delete" 
+                        onClick={() =>dispatch({type: "DELETE_GAME_MODAL",gamePaylod: game,})}>
                         <DeleteIcon />
                       </Button>
                     </div>
@@ -295,31 +288,28 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
     case "ADD_GAME_MODAL":
       return { ...state, modals: { ...state.modals, addGame: { show: true } } };
     case "EDIT_GAME_MODAL":
-      if(action?.gamePaylod){
+      if(action?.gamePaylod)
         return { ...state, modals: { ...state.modals, editGame: { show: true, game: action.gamePaylod } } };
-      } 
       return state;
     case "DELETE_GAME_MODAL":
-      if(action?.gamePaylod){
+      if(action?.gamePaylod)
         return { ...state, modals: { ...state.modals, deleteGame: { show: true, game: action.gamePaylod } } };
-      }
       return state;
     case "CLOSE_MODALS":
-      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false} , deleteGame: {show: false}} };
+      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false}, deleteGame: {show: false}} };
     case "SET_MESSAGES": 
       return {...state, messages: action?.paylod ?? ""};
     case "SET_PAGE": 
-      if(action?.pagePaylod){
+      if(action?.pagePaylod)
         return {...state, page: action?.pagePaylod};
-      }
-      return {...state};
+      return state;
     case "SET_QUERY": 
       if(action?.queryPaylod) {
         const prevPage = state.query.pageNo;
         const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
         return {...state,query: {...state.query, ...action.queryPaylod, pageNo}}
       }
-      return {...state};
+      return state;
     case "NEXT_PAGE": 
       return {...state, query: {...state.query, pageNo: state.query.pageNo + 1}};
     case "PREV_PAGE": 
