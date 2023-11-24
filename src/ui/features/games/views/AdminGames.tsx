@@ -16,6 +16,7 @@ import EditIcon from "@/ui/components/common/icons/EditIcon";
 import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditGame from "../Forms/EditGame";
 import DeleteGame from "../Forms/DeleteGame";
+import Link from "next/link";
 
 const AdminGames = () => {
   const { data: session, status: authStatus } = useSession();
@@ -119,7 +120,13 @@ const AdminGames = () => {
                   </TableBodyCell>,
                   //
                   <TableBodyCell key={`row-${index}-col-3`}>
-                    <NormalText text={"Slots"} />
+                    <Link
+                      href={`games/${game.gameId}/slots`}
+                      className="px-3 py-1 rounded-md bg-sky-600 text-white hover:bg-sky-800"
+                      title="Open Slots"
+                    >
+                      Slots
+                    </Link>
                   </TableBodyCell>,
                   //
                   <TableBodyCell key={`row-${index}-col-4`}>
