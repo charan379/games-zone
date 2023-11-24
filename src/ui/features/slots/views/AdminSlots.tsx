@@ -13,6 +13,9 @@ import TableFooter from "@/ui/components/table/TableFooter";
 import TableHOC from "@/ui/components/table/TableHOC";
 import { useSession } from "next-auth/react";
 import React, { useReducer, useEffect } from "react";
+import AddSlot from "../forms/AddSlot";
+import EditSlot from "../forms/EditSlot";
+import DeleteSlot from "../forms/DeleteSlot";
 
 interface Props {
   gameId: number;
@@ -185,16 +188,18 @@ const AdminSlots: React.FC<Props> = (props) => {
 
       {/* modal */}
       <ModalHOC key={"addGameModal"} show={state.modals.addSlot.show}>
-        {/* <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} /> */}
+        {/* prettier-ignore */}
+        <AddSlot close={() => dispatch({ type: "CLOSE_MODALS" })} gameId={gameId}
+        />
       </ModalHOC>
       <ModalHOC key={"editGameModal"} show={state.modals.editSlot.show}>
         {/* prettier-ignore */}
-        {/* <EditGame game={state.modals.editSlot.slot} close={() => dispatch({ type: "CLOSE_MODALS" })} /> */}
+        <EditSlot slot={state.modals.editSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} />
       </ModalHOC>
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.deleteSlot.show}>
         {/* prettier-ignore */}
-        {/* <DeleteGame game={state.modals.deleteSlot.slot} close={() => dispatch({ type: "CLOSE_MODALS" })} /> */}
+        <DeleteSlot slot={state.modals.deleteSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} />
       </ModalHOC>
     </>
   );
