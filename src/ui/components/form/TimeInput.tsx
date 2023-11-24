@@ -1,5 +1,4 @@
 import React from "react";
-import SearchIcon from "../common/SearchIcon";
 
 interface TimeInputProps {
   label?: string;
