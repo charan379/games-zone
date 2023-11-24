@@ -21,6 +21,16 @@ declare type GameQuery = {
     pageNo: number,
     sort: string,
 }
+
+declare type SlotQuery = {
+    name: string,
+    location: string,
+    pageNo: number,
+    limit: number,
+    sort: string,
+}
+
+
 declare type GZError = {
     errorMessage: string,
     errorCode: number,
