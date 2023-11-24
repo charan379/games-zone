@@ -10,7 +10,7 @@ const Navbar = () => {
   const { Y: scrollPosition } = useScroll();
 
   return (
-    <nav className={`z-10 ${scrollPosition > 2 ? 'sticky  opacity-100 shadow-none' : 'relative'} w-full border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-md transition-opacity duration-300`}>
+    <nav className={`z-10 ${scrollPosition > 2 ? 'sticky top-0 opacity-80 shadow-none' : 'relative'} w-full border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-md transition-opacity duration-300`}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Logo />
         <Hamburger handleClick={() => setDisplayMenu(!displayMenu)} />
