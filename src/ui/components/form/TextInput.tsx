@@ -28,7 +28,7 @@ const TextInput: React.FC<Props> = (props) => {
       <input
         type="text"
         required
-        name="query"
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder ?? label}
