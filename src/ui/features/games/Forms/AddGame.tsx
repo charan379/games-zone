@@ -39,7 +39,7 @@ const AddGame: React.FC<Props> = (props) => {
   };
 
   return (
-    <ModalLayout label="Add new Game">
+    <ModalLayout label="Add New Game">
       <form className="px-8 py-6" onSubmit={handleSubmit}>
         <TextInput
           label="Game Name"

@@ -3,10 +3,10 @@ import React from "react";
 const DeleteIcon: React.FC = () => {
   return (
     <svg
-      fill="#f00f0f"
+      fill="#ff4c78"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="#f00f0f"
+      stroke="#ff4c78"
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
