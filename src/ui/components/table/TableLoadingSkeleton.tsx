@@ -3,7 +3,7 @@ import React from "react";
 const LoadingBar: React.FC = () => {
   return (
     <div className="h-4 w-[70%] bg-gray-300 rounded overflow-hidden">
-      <div className="animate-pulse h-full bg-slate-500"></div>
+      <div className="animate-pulse h-full bg-slate-400"></div>
     </div>
   );
 };
