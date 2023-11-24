@@ -41,7 +41,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         if (res.ok && res.result) {
           dispatch({type: "SET_SLOT_RECORD",slotsRecordPayload: groupByInnerObjectField(res.result, "slot.location")});
           if (res.result.length === 0)
-            dispatch({type: "SET_MESSAGES",paylod: "No games found for given query !"});
+            dispatch({type: "SET_MESSAGES",paylod: "No Slots found for given query !"});
         } else {
           dispatch({type: "SET_MESSAGES",paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !"});
         }
