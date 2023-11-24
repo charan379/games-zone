@@ -2,7 +2,7 @@ import React from "react";
 import SearchIcon from "../common/SearchIcon";
 
 interface Props {
-  label: string;
+  label?: string;
   name: string;
   value: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

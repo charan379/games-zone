@@ -16,6 +16,7 @@ import React, { useReducer, useEffect } from "react";
 import AddSlot from "../forms/AddSlot";
 import EditSlot from "../forms/EditSlot";
 import DeleteSlot from "../forms/DeleteSlot";
+import convertTo12HourFormat from "@/lib/utils/convertTo12HrFormat";
 
 interface Props {
   gameId: number;
@@ -141,11 +142,11 @@ const AdminSlots: React.FC<Props> = (props) => {
                   </TableBodyCell>,
                   //
                   <TableBodyCell key={`row-${index}-col-3`}>
-                    <NormalText text={slot?.startTime} />
+                    <NormalText text={convertTo12HourFormat(slot?.startTime)} />
                   </TableBodyCell>,
                   //
                   <TableBodyCell key={`row-${index}-col-4`}>
-                    <NormalText text={slot?.endTime} />
+                    <NormalText text={convertTo12HourFormat(slot?.endTime)} />
                   </TableBodyCell>,
                   //
                   <TableBodyCell key={`row-${index}-col-5`}>

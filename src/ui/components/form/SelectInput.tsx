@@ -2,7 +2,7 @@ import React from "react";
 import DownArrow from "../common/DownArrow";
 
 interface Props {
-  lable: string;
+  lable?: string;
   name: string;
   value: any;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

@@ -14,6 +14,12 @@ declare type Slot = {
     gameId: number
 }
 
+declare type SlotAvailabilityRecord = {
+    slot: Slot,
+    isBooked: boolean,
+    forDate: string,
+}
+
 declare type GameQuery = {
     query: string,
     limit: number,
@@ -80,6 +86,7 @@ declare type ButtonProps = {
     rounded?: string,
     type?: "submit" | "button"
     danger?: boolean
+    success?: boolean
     classsName?: string;
     title?: string
 }

@@ -8,6 +8,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     rounded,
     type,
     danger,
+    success,
     classsName,
     title,
   } = props;
@@ -18,7 +19,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       disabled={disabled}
       title={title ?? "button"}
       // prettier-ignore
-      className={classsName ?? `mt-4 text-sm ${disabled || danger ? "bg-red-400" : "bg-slate-500"} text-white py-2 px-4 hover:bg-purple-600 ${rounded}`}
+      className={classsName ?? `mt-4 text-sm ${disabled || danger ? "bg-red-400" : success ? "bg-emerald-500" : "bg-slate-500"}  text-white py-2 px-4 hover:bg-purple-600 ${rounded}`}
     >
       {children}
     </button>
