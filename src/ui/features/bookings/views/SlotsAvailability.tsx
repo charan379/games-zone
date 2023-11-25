@@ -2,13 +2,13 @@
 
 import React, { useEffect, useReducer } from "react";
 import { groupByInnerObjectField } from "@/lib/utils/groupBy";
-import SlotCard from "./SlotCard";
-import SlotLocation from "./SlotLocation";
+import SlotCard from "../slotsavailability/SlotCard";
+import SlotLocation from "../slotsavailability/SlotLocation";
 import gzRequest from "@/lib/utils/gzRequest";
 import { useSession } from "next-auth/react";
 import DateInput from "@/ui/components/form/DateInput";
 import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
-import SlotLocationsHOC from "./SlotLocationsHOC";
+import SlotLocationsHOC from "../slotsavailability/SlotLocationsHOC";
 
 interface Props {
   gameId: number;
