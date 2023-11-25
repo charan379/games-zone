@@ -54,6 +54,14 @@ declare type GameQuery = {
     sort: string,
 }
 
+declare type BookingQuery = {
+    forDate: string,
+    limit: number,
+    include: string,
+    pageNo: number,
+    sort: string,
+}
+
 declare type SlotQuery = {
     name: string,
     location: string,

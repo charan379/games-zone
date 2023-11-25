@@ -5,30 +5,43 @@ import BookingDetailsSection from "./components/BookingDetailsSection";
 import SlotDetailsSection from "./components/SlotDetailsSection";
 import UserDetailsSection from "./components/UserDetailsSection";
 
-const BookingCard = () => {
+interface Props {
+  booking: Partial<Booking>;
+}
+
+const BookingCard: React.FC<Props> = (props) => {
+  const { booking } = props;
+
   return (
-    <div className="w-full max-w-4xl relative py-5 mx-auto text-center">
+    <div className="mt-1 w-full max-w-4xl relative mx-auto text-center">
       <div className="mt-4 w-full bg-white shadow-md rounded-lg text-left">
         <div className="h-2 w-full bg-slate-400 rounded-t-md"></div>
         {/* booking */}
         <BookingCardSection>
           <BookingDetailsSection
-            bookingId={dd.bookingId}
-            forDate={dd.forDate}
-            transactionDate={dd.transactionDate}
-            bookingStatus={dd.bookingStatus}
+            bookingId={booking.bookingId}
+            forDate={booking.forDate}
+            transactionDate={booking.transactionDate}
+            bookingStatus={booking.bookingStatus}
           />
         </BookingCardSection>
         {/* Game / Slot */}
-        <BookingCardSection>
-          <SlotDetailsSection game={dd.game} slot={dd.slot} />
-        </BookingCardSection>
+        {booking.slot && (
+          <BookingCardSection>
+            <SlotDetailsSection
+              game={booking.game as Partial<Game>}
+              slot={booking.slot}
+            />
+          </BookingCardSection>
+        )}
         {/* User */}
-        <BookingCardSection>
-          <UserDetailsSection user={dd.user} />
-        </BookingCardSection>
+        {booking?.user && (
+          <BookingCardSection>
+            <UserDetailsSection user={booking.user as Partial<User>} />
+          </BookingCardSection>
+        )}
         {/* Actions */}
-        <div className="flex flex-row px-2 py-2 gap-5 bg-gray-50 rounded-md shadow-sm">
+        <div className="flex flex-col sm:flex-row px-2 py-2 sm:gap-5 bg-gray-50 rounded-md shadow-sm">
           <Button success rounded={"rounded-md"}>
             Approve
           </Button>
@@ -45,42 +58,3 @@ const BookingCard = () => {
 };
 
 export default BookingCard;
-
-const dd: Booking = {
-  bookingId: 1000,
-  forDate: "20-12-2023",
-  transactionDate: "2023-11-10T21:04:28.138136",
-  bookingStatus: "REQUESTED",
-  gameId: 1000,
-  slotId: 1004,
-  userId: 1000,
-  game: {
-    gameId: 1000,
-    gameName: "Cricket",
-    image: "",
-  },
-  slot: {
-    slotId: 1004,
-    slotName: "Slot5",
-    startTime: "08:00:00",
-    endTime: "22:00:00",
-    location: "Ground 2",
-    gameId: 1000,
-  },
-  user: {
-    userId: 1000,
-    userName: "testUser1",
-    email: "testUser1@gmail.com",
-    status: "ACTIVE",
-    roles: [
-      {
-        roleId: 1001,
-        roleName: "USER",
-      },
-      {
-        roleId: 1000,
-        roleName: "ADMIN",
-      },
-    ],
-  },
-};
