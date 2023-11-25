@@ -2,16 +2,16 @@ import React from "react";
 import DownArrow from "../common/DownArrow";
 
 interface Props {
-  lable?: string;
+  label?: string;
   name: string;
   value: any;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: { lable: string; value: any }[];
+  options: { label: string; value: any }[];
   rounded: string;
 }
 
 const SelectInput: React.FC<Props> = (props) => {
-  const { lable, name, options, value, onChange, rounded } = props;
+  const { label, name, options, value, onChange, rounded } = props;
   return (
     <div className="relative" key={name}>
       <select
@@ -23,7 +23,7 @@ const SelectInput: React.FC<Props> = (props) => {
         {options.map((option, index) => {
           return (
             <option value={option.value} key={index}>
-              {option.lable}
+              {option.label}
             </option>
           );
         })}

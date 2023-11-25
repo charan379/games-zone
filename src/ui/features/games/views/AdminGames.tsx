@@ -71,7 +71,7 @@ const AdminGames = () => {
               <div className="flex flex-row mb-1 sm:mb-0">
                 {/*  */}
                 <SelectInput
-                  lable="Limit"
+                  label="Limit"
                   name="limit"
                   value={state.query.limit}
                   options={limitOptions}
@@ -80,7 +80,7 @@ const AdminGames = () => {
                 />
                 {/*  */}
                 <SelectInput
-                  lable="Sort"
+                  label="Sort"
                   name="sort"
                   value={state.query.sort}
                   options={sortOptions}
@@ -202,36 +202,36 @@ async function fetchGames(
   });
 }
 
-const limitOptions: { lable: string; value: any }[] = [
+const limitOptions: { label: string; value: any }[] = [
   {
-    lable: "5",
+    label: "5",
     value: 5,
   },
   {
-    lable: "10",
+    label: "10",
     value: 10,
   },
   {
-    lable: "20",
+    label: "20",
     value: 20,
   },
 ];
 
-const sortOptions: { lable: string; value: any }[] = [
+const sortOptions: { label: string; value: any }[] = [
   {
-    lable: "ID - ASC",
+    label: "ID - ASC",
     value: "gameId.asc",
   },
   {
-    lable: "ID - DESC",
+    label: "ID - DESC",
     value: "gameId.desc",
   },
   {
-    lable: "Name - ASC",
+    label: "Name - ASC",
     value: "gameName.asc",
   },
   {
-    lable: "Name - DESC",
+    label: "Name - DESC",
     value: "gameName.desc",
   },
 ];

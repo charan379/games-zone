@@ -11,17 +11,19 @@ const SlotDetailsSection: React.FC<Props> = (props) => {
   const { game, slot } = props;
   return (
     <>
-      <div
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
-        key={1}
-      >
-        <KeyValuePair label="Game" value={game?.gameName} key={2} />
-        <KeyValuePair
-          label="Game ID"
-          value={game?.gameId?.toString()}
+      {game && (
+        <div
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
           key={1}
-        />
-      </div>
+        >
+          <KeyValuePair label="Game" value={game?.gameName} key={2} />
+          <KeyValuePair
+            label="Game ID"
+            value={game?.gameId?.toString()}
+            key={1}
+          />
+        </div>
+      )}
       <div
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
         key={2}

@@ -78,7 +78,7 @@ const AdminSlots: React.FC<Props> = (props) => {
               <div className="flex flex-row mb-1 sm:mb-0">
                 {/*  */}
                 <SelectInput
-                  lable="Limit"
+                  label="Limit"
                   name="limit"
                   value={state.query.limit}
                   options={limitOptions}
@@ -88,7 +88,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                 />
                 {/*  */}
                 <SelectInput
-                  lable="Sort"
+                  label="Sort"
                   name="sort"
                   value={state.query.sort}
                   options={sortOptions}
@@ -216,60 +216,60 @@ const NormalText: React.FC<any> = (props) => {
   );
 };
 
-const limitOptions: { lable: string; value: any }[] = [
+const limitOptions: { label: string; value: any }[] = [
   {
-    lable: "5",
+    label: "5",
     value: 5,
   },
   {
-    lable: "10",
+    label: "10",
     value: 10,
   },
   {
-    lable: "20",
+    label: "20",
     value: 20,
   },
 ];
 
-const sortOptions: { lable: string; value: any }[] = [
+const sortOptions: { label: string; value: any }[] = [
   {
-    lable: "ID - ASC",
+    label: "ID - ASC",
     value: "slotId.asc",
   },
   {
-    lable: "ID - DESC",
+    label: "ID - DESC",
     value: "slotId.desc",
   },
   {
-    lable: "Name - ASC",
+    label: "Name - ASC",
     value: "slotName.asc",
   },
   {
-    lable: "Name - DESC",
+    label: "Name - DESC",
     value: "slotName.desc",
   },
   {
-    lable: "StartTime - ASC",
+    label: "StartTime - ASC",
     value: "startTime.asc",
   },
   {
-    lable: "StartTime - DESC",
+    label: "StartTime - DESC",
     value: "startTime.desc",
   },
   {
-    lable: "EndTime - ASC",
+    label: "EndTime - ASC",
     value: "endTime.asc",
   },
   {
-    lable: "EndTime - DESC",
+    label: "EndTime - DESC",
     value: "endTime.desc",
   },
   {
-    lable: "Location - ASC",
+    label: "Location - ASC",
     value: "location.asc",
   },
   {
-    lable: "Location - DESC",
+    label: "Location - DESC",
     value: "location.desc",
   },
 ];

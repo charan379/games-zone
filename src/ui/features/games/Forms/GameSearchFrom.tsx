@@ -35,13 +35,13 @@ const GameSearchFrom: React.FC<Props> = (props) => {
 
 export default GameSearchFrom;
 
-const sortOptions: { lable: string; value: any }[] = [
+const sortOptions: { label: string; value: any }[] = [
   {
-    lable: "Name - ASC",
+    label: "Name - ASC",
     value: "gameName.asc",
   },
   {
-    lable: "Name - DESC",
+    label: "Name - DESC",
     value: "gameName.desc",
   },
 ];
