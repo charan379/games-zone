@@ -256,7 +256,7 @@ const initialState: ComponentState = {
   },
   messages: "",
   page: {
-    content: [{ gameId: 0, gameName: "", image: "" }],
+    content: [],
     last: true,
     totalPages: 0,
     totalElements: 0,

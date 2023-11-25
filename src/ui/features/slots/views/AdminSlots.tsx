@@ -295,16 +295,7 @@ const initialState: ComponentState = {
   },
   messages: "",
   page: {
-    content: [
-      {
-        slotId: 0,
-        slotName: "",
-        startTime: "00:00:00",
-        endTime: "00:00:00",
-        location: "",
-        gameId: 0,
-      },
-    ],
+    content: [],
     last: true,
     totalPages: 0,
     totalElements: 0,
