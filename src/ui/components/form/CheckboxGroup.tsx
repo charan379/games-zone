@@ -41,7 +41,7 @@ const CheckboxGroup: React.FC<Props> = (props) => {
         <span className="rounded-md shadow-sm">
           <button
             type="button"
-            className={`${rounded} inline-flex justify-center w-full px-4 py-3 h-full border border-slate-700 text-sm font-medium text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500`}
+            className={`${rounded} inline-flex justify-center w-full px-4 py-3 h-full border border-slate-500 text-sm font-medium text-white bg-slate-500 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500`}
             onClick={handleToggleDropdown}
           >
             {label}
