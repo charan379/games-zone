@@ -7,6 +7,8 @@ import SelectInput from "@/ui/components/form/SelectInput";
 import BookingListHOC from "../BookingListHOC";
 import BookingCard from "../bookingcard/BookingCard";
 import TableFooter from "@/ui/components/table/TableFooter";
+import CheckboxGroup from "@/ui/components/form/CheckboxGroup";
+import DateInput from "@/ui/components/form/DateInput";
 
 const Bookings = () => {
   const { data: session, status: authStatus } = useSession();
@@ -17,6 +19,14 @@ const Bookings = () => {
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     event.preventDefault();
     dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
+  };
+
+  // prettier-ignore
+  const handleIncludesChange = (obj: object) => {
+    dispatch({type: "SET_QUERY", queryPaylod: {...state.query, include: Object.entries(obj).map(([value, isChecked]) => {
+       if(isChecked) return value; 
+    }).join(",") }})
+
   };
 
   useEffect(() => {
@@ -63,7 +73,7 @@ const Bookings = () => {
               <div className="flex flex-row mb-1 sm:mb-0">
                 {/*  */}
                 <SelectInput
-                  lable="Limit"
+                  label="Limit"
                   name="limit"
                   value={state.query.limit}
                   options={limitOptions}
@@ -72,12 +82,24 @@ const Bookings = () => {
                 />
                 {/*  */}
                 <SelectInput
-                  lable="Sort"
+                  label="Sort"
                   name="sort"
                   value={state.query.sort}
                   options={sortOptions}
                   onChange={(e) => handleQueryChange(e)}
                   rounded=""
+                />
+                <CheckboxGroup
+                  label="Include Details Of"
+                  onChange={handleIncludesChange}
+                  options={includeOptions}
+                  rounded="rounded-none"
+                />
+                <DateInput
+                  name={""}
+                  value={""}
+                  onChange={() => {}}
+                  rounded={"rounded-r"}
                 />
               </div>
               {/*  */}
@@ -122,32 +144,37 @@ async function fetchBookings(
   });
 }
 
-const limitOptions: { lable: string; value: any }[] = [
+const limitOptions: { label: string; value: any }[] = [
   {
-    lable: "5",
+    label: "5",
     value: 5,
   },
   {
-    lable: "10",
+    label: "10",
     value: 10,
   },
   {
-    lable: "20",
+    label: "20",
     value: 20,
   },
 ];
 
-const sortOptions: { lable: string; value: any }[] = [
+const sortOptions: { label: string; value: any }[] = [
   {
-    lable: "ForDate - ASC",
+    label: "ForDate - ASC",
     value: "forDate.asc",
   },
   {
-    lable: "ForDate - DESC",
+    label: "ForDate - DESC",
     value: "forDate.desc",
   },
 ];
 
+const includeOptions: { label: string; value: string }[] = [
+  { label: "Slot Detaisl", value: "slot" },
+  { label: "User Details", value: "user" },
+  { label: "Game Detaisl", value: "game" },
+];
 interface ComponentState {
   messages: string;
   page: GZPage<Partial<Booking>>;

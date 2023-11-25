@@ -18,7 +18,7 @@ const SelectInput: React.FC<Props> = (props) => {
         name={name}
         value={value}
         onChange={onChange}
-        className={`appearance-none h-full ${rounded} border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
+        className={`cursor-pointer appearance-none h-full ${rounded} border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:bg-white focus:border-gray-500`}
       >
         {options.map((option, index) => {
           return (

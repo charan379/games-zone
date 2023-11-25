@@ -26,11 +26,11 @@ const BookingCard: React.FC<Props> = (props) => {
           />
         </BookingCardSection>
         {/* Game / Slot */}
-        {booking.slot && (
+        {(booking?.game || booking?.slot) && (
           <BookingCardSection>
             <SlotDetailsSection
               game={booking.game as Partial<Game>}
-              slot={booking.slot}
+              slot={booking.slot as Slot}
             />
           </BookingCardSection>
         )}

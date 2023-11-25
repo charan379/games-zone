@@ -32,7 +32,7 @@ const TextInput: React.FC<Props> = (props) => {
         value={value}
         onChange={onChange}
         placeholder={placeholder ?? label}
-        className={`appearance-none ${rounded} border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1`}
+        className={`cursor-pointer appearance-none ${rounded} border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600`}
       />
     </div>
   );
