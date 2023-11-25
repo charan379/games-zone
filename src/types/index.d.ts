@@ -14,6 +14,32 @@ declare type Slot = {
     gameId: number
 }
 
+declare type Booking = {
+    bookingId: number,
+    forDate: string,
+    transactionDate: string,
+    bookingStatus: "APPROVED" | "REQUESTED" | "REJECTED" | "CANCELLED" | string,
+    gameId: number,
+    slotId: number,
+    userId: number,
+    game: Game,
+    slot: Slot,
+    user: User,
+}
+
+declare type User = {
+    userId: number,
+    userName: string,
+    email: string,
+    status: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "DELETED" | string,
+    roles: UserRole[]
+}
+
+declare type UserRole = {
+    roleId: number,
+    roleName: string,
+}
+
 declare type SlotAvailabilityRecord = {
     slot: Slot,
     isBooked: boolean,
