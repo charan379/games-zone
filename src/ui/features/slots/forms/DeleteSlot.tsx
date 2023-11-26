@@ -8,10 +8,11 @@ interface Props {
   close: () => void;
   gameId: number;
   slot: Slot;
+  onSuccess: (slot: Slot, actionType: "UPDATE_SLOT" | "APPEND_SLOT") => void;
 }
 
 const DeleteSlot: React.FC<Props> = (props) => {
-  const { close, gameId, slot } = props;
+  const { close, gameId, slot, onSuccess } = props;
 
   const { data: session, status: authStatus } = useSession();
 
@@ -23,8 +24,9 @@ const DeleteSlot: React.FC<Props> = (props) => {
 
     deleteSlot(gameId, slot.slotId, session?.auth?.token)
       .then((res) => {
-        if (res.ok && res.result) {
+        if (res.ok && res?.result) {
           setMessages(res?.result?.message);
+          onSuccess({ ...slot, renderStatus: "deleted" }, "UPDATE_SLOT");
         } else {
           setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
         }
@@ -49,7 +51,7 @@ const DeleteSlot: React.FC<Props> = (props) => {
             along with this slot !
           </span>
         </div>
-        <div className="flex justify-between items-baseline">
+        <div className="flex mt-4 justify-between items-center">
           <Button rounded="rounded-md" danger key={`ad-1`} type="submit">
             Delete
           </Button>
@@ -59,7 +61,7 @@ const DeleteSlot: React.FC<Props> = (props) => {
             Close
           </Button>
         </div>
-        <div className="text-sm">{messages}</div>
+        <div className="mt-4 text-sm">{messages}</div>
       </form>
     </ModalLayout>
   );

@@ -34,6 +34,11 @@ const AdminSlots: React.FC<Props> = (props) => {
         dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
       };
 
+  // prettier-ignore
+  const updateSlot = (slot: Slot, actionType: "UPDATE_SLOT" | "APPEND_SLOT") => {
+    dispatch({type: actionType, slotPaylod: slot });
+  }
+
   useEffect(() => {
     if (authStatus === "loading") return () => {};
 
@@ -130,38 +135,39 @@ const AdminSlots: React.FC<Props> = (props) => {
               render={state.messages ? false : true}
               // prettier-ignore
               headerRows={["ID", "Slot Name", "Start Time", "End Time","Location", "Actions"]}
+              // prettier-ignore
               bodyRows={state.page?.content?.map((slot, index) => {
                 return [
                   //
-                  <TableBodyCell key={`row-${index}-col-1`}>
+                  <TableBodyCell key={`row-${index}-col-1`} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.slotId} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-2`}>
+                  <TableBodyCell key={`row-${index}-col-2`} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.slotName} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-3`}>
+                  <TableBodyCell key={`row-${index}-col-3`} renderStatus={slot?.renderStatus}>
                     <NormalText text={convertTo12HourFormat(slot?.startTime)} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-4`}>
+                  <TableBodyCell key={`row-${index}-col-4`} renderStatus={slot?.renderStatus}>
                     <NormalText text={convertTo12HourFormat(slot?.endTime)} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-5`}>
+                  <TableBodyCell key={`row-${index}-col-5`} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.location} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-6`}>
+                  <TableBodyCell key={`row-${index}-col-6`} renderStatus={slot?.renderStatus}>
                     <div className="inline-flex gap-4 w-full items-center justify-start">
                       {/* prettier-ignore */}
-                      <Button classsName="w-7" title="Edit" 
+                      <Button classsName="w-7" title="Edit" disabled={slot?.renderStatus === "deleted"}
                         onClick={() => dispatch({ type: "EDIT_SLOT_MODAL", slotPaylod: slot })}>
                         <EditIcon />
                       </Button>
                       {/* prettier-ignore */}
-                      <Button classsName="w-7" title="Delete"
+                      <Button classsName="w-7" title="Delete" disabled={slot?.renderStatus === "deleted"}
                         onClick={() =>dispatch({type: "DELETE_SLOT_MODAL",slotPaylod: slot,})}>
                         <DeleteIcon />
                       </Button>
@@ -190,17 +196,16 @@ const AdminSlots: React.FC<Props> = (props) => {
       {/* modal */}
       <ModalHOC key={"addGameModal"} show={state.modals.addSlot.show}>
         {/* prettier-ignore */}
-        <AddSlot close={() => dispatch({ type: "CLOSE_MODALS" })} gameId={gameId}
-        />
+        <AddSlot close={() => dispatch({ type: "CLOSE_MODALS" })} gameId={gameId} onSuccess={updateSlot} />
       </ModalHOC>
       <ModalHOC key={"editGameModal"} show={state.modals.editSlot.show}>
         {/* prettier-ignore */}
-        <EditSlot slot={state.modals.editSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <EditSlot slot={state.modals.editSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateSlot} />
       </ModalHOC>
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.deleteSlot.show}>
         {/* prettier-ignore */}
-        <DeleteSlot slot={state.modals.deleteSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <DeleteSlot slot={state.modals.deleteSlot.slot ?? {} as Slot} gameId={gameId} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateSlot} />
       </ModalHOC>
     </>
   );
@@ -357,6 +362,12 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
         return { ...state, modals: { ...state.modals, addSlot: { show: false }, editSlot: {show: false}, deleteSlot: {show: false}} };
       case "SET_MESSAGES": 
         return {...state, messages: action?.paylod ?? ""};
+      case "UPDATE_SLOT":
+        return {...state, page: {...state.page, content:state.page.content.map((s) => (s.slotId === action?.slotPaylod?.slotId)&&action?.slotPaylod ? {...s, ...action.slotPaylod} : s)}}
+      case "APPEND_SLOT":
+        if(action?.slotPaylod)
+          return {...state, page: {...state.page, content:[...state.page.content, action?.slotPaylod]}};
+        return state;
       case "SET_PAGE": 
         if(action?.pagePaylod)
           return {...state, page: action?.pagePaylod};

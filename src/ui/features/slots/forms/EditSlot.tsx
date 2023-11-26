@@ -9,10 +9,11 @@ interface Props {
   close: () => void;
   gameId: number;
   slot: Slot;
+  onSuccess: (slot: Slot, actionType: "UPDATE_SLOT" | "APPEND_SLOT") => void;
 }
 
 const EditSlot: React.FC<Props> = (props) => {
-  const { close, gameId, slot: existingSlot } = props;
+  const { close, gameId, slot: existingSlot, onSuccess } = props;
 
   const { data: session, status: authStatus } = useSession();
 
@@ -32,8 +33,9 @@ const EditSlot: React.FC<Props> = (props) => {
 
     editSlot(gameId, slot.slotId, slot, session?.auth?.token)
       .then((res) => {
-        if (res.ok && res.result) {
+        if (res.ok && res?.result) {
           setMessages(JSON.stringify(res?.result));
+          onSuccess({ ...res.result, renderStatus: "updated" }, "UPDATE_SLOT");
         } else {
           setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
         }
@@ -48,7 +50,7 @@ const EditSlot: React.FC<Props> = (props) => {
     <ModalLayout label={`Edit Slot : ${slot.slotId}`}>
       {/* prettier-ignore */}
       <SlotForm slot={slot} handleFormSubmit={handleSubmit} handleChange={handleChange}>
-        <div className="flex justify-between items-baseline">
+        <div className="flex mt-4 justify-between items-baseline">
           <Button rounded="rounded-md" key={`ad-1`} type="submit">
             Submit
           </Button>
@@ -58,7 +60,7 @@ const EditSlot: React.FC<Props> = (props) => {
             Close
           </Button>
         </div>
-        <div className="text-sm">{messages}</div>
+        <div className="mt-4 text-sm">{messages}</div>
       </SlotForm>
     </ModalLayout>
   );
