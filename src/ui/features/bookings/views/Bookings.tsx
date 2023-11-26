@@ -29,6 +29,10 @@ const Bookings = () => {
 
   };
 
+  const updateBooking = (b: Partial<Booking>) => {
+    dispatch({ type: "UPDATE_BOOKING", bookingPayload: b });
+  };
+
   useEffect(() => {
     if (authStatus === "loading") return () => {};
 
@@ -108,22 +112,30 @@ const Bookings = () => {
           {/* bookings */}
           <BookingListHOC loading={state.loading}>
             {state.page.content.map((booking, index) => {
-              return <BookingCard key={index} booking={booking} />;
+              return (
+                <BookingCard
+                  key={index}
+                  booking={booking}
+                  updateBooking={updateBooking}
+                />
+              );
             })}
           </BookingListHOC>
-          <TableFooter
-            messages={state.messages}
-            nextPage={() => dispatch({ type: "NEXT_PAGE" })}
-            prevPage={() => dispatch({ type: "PREV_PAGE" })}
-            entriesCountProps={{
-              pageNumber: state.page.number,
-              pageSize: state.page.size,
-              tableName: "Bookings",
-              totalElements: state.page.totalElements,
-            }}
-            isFirstPage={state.page.first}
-            isLastPage={state.page.last}
-          />
+          <div className="w-full max-w-4xl relative mx-auto text-center mt-4 inline-block shadow rounded-lg overflow-hidden">
+            <TableFooter
+              messages={state.messages}
+              nextPage={() => dispatch({ type: "NEXT_PAGE" })}
+              prevPage={() => dispatch({ type: "PREV_PAGE" })}
+              entriesCountProps={{
+                pageNumber: state.page.number,
+                pageSize: state.page.size,
+                tableName: "Bookings",
+                totalElements: state.page.totalElements,
+              }}
+              isFirstPage={state.page.first}
+              isLastPage={state.page.last}
+            />
+          </div>
         </div>
       </div>
     </>
@@ -228,7 +240,7 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
         return {...state, page: action?.pagePaylod};
       return state;
     case "UPDATE_BOOKING":
-        return {...state, page: {...state.page, content:state.page.content.map((b) => (b.bookingId === action?.bookingPayload?.bookingId)&&action?.bookingPayload ? action.bookingPayload : b)}}
+        return {...state, page: {...state.page, content:state.page.content.map((b) => (b.bookingId === action?.bookingPayload?.bookingId)&&action?.bookingPayload ? {...b, ...action.bookingPayload} : b)}}
     case "SET_QUERY": 
       if(action?.queryPaylod) {
         const prevPage = state.query.pageNo;
