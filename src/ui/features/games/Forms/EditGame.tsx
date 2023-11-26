@@ -10,10 +10,11 @@ import React, { useState } from "react";
 interface Props {
   close: () => void;
   game?: Game;
+  onSuccess: (game: Game, actionType: "UPDATE_GAME" | "APPEND_GAME") => void;
 }
 
 const EditGame: React.FC<Props> = (props) => {
-  const { close, game } = props;
+  const { close, game, onSuccess } = props;
 
   const { data: session, status: authStatus } = useSession();
 
@@ -28,8 +29,12 @@ const EditGame: React.FC<Props> = (props) => {
     if (game?.gameId)
       editGame(game.gameId, gameName, session?.auth?.token)
         .then((res) => {
-          if (res.ok && res.result) {
+          if (res.ok && res?.result) {
             setMessages(JSON.stringify(res?.result));
+            onSuccess(
+              { ...res.result, renderStatus: "updated" },
+              "UPDATE_GAME"
+            );
           } else {
             setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
           }
@@ -53,7 +58,7 @@ const EditGame: React.FC<Props> = (props) => {
           placeholder="Game Name"
           value={gameName}
         />
-        <div className="flex justify-between items-baseline">
+        <div className="flex mt-4 justify-between items-baseline">
           <Button rounded="rounded-md" key={`ad-1`} type="submit">
             Submit
           </Button>
@@ -63,8 +68,8 @@ const EditGame: React.FC<Props> = (props) => {
               Close
             </Button>
         </div>
+        <div className="text-sm">{messages}</div>
       </form>
-      <div className="text-sm">{messages}</div>
     </ModalLayout>
   );
 };

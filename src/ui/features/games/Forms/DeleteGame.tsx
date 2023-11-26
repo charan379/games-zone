@@ -9,10 +9,11 @@ import React, { useState } from "react";
 interface Props {
   close: () => void;
   game?: Game;
+  onSuccess: (game: Game, actionType: "UPDATE_GAME" | "APPEND_GAME") => void;
 }
 
 const DeleteGame: React.FC<Props> = (props) => {
-  const { close, game } = props;
+  const { close, game, onSuccess } = props;
 
   const { data: session, status: authStatus } = useSession();
 
@@ -25,9 +26,9 @@ const DeleteGame: React.FC<Props> = (props) => {
     if (game?.gameId)
       deleteGame(game.gameId, session?.auth?.token)
         .then((res) => {
-          if (res.ok && res.result) {
-            console.log(res);
+          if (res.ok && res?.result) {
             setMessages(res?.result?.message);
+            onSuccess({ ...game, renderStatus: "deleted" }, "UPDATE_GAME");
           } else {
             setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
           }
@@ -52,7 +53,7 @@ const DeleteGame: React.FC<Props> = (props) => {
             get deleted along with this game !
           </span>
         </div>
-        <div className="flex justify-between items-baseline">
+        <div className="flex mt-4 justify-between items-baseline">
           <Button rounded="rounded-md" danger key={`ad-1`} type="submit">
             Delete
           </Button>
@@ -62,8 +63,8 @@ const DeleteGame: React.FC<Props> = (props) => {
               Close
             </Button>
         </div>
+        <div className="text-sm">{messages}</div>
       </form>
-      <div className="text-sm">{messages}</div>
     </ModalLayout>
   );
 };

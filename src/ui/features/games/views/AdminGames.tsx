@@ -29,6 +29,11 @@ const AdminGames = () => {
     dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
   };
 
+  // prettier-ignore
+  const updateGame = (game: Game, actionType: "UPDATE_GAME" | "APPEND_GAME") => {
+    dispatch({type: actionType, gamePaylod: game});
+  }
+
   useEffect(() => {
     if (authStatus === "loading") return () => {};
 
@@ -110,34 +115,34 @@ const AdminGames = () => {
               headerRows={["ID", "Game Name", "Slots", "Actions"]}
               bodyRows={state.page?.content?.map((game, index) => {
                 return [
-                  //
-                  <TableBodyCell key={`row-${index}-col-1`}>
+                  // prettier-ignore
+                  <TableBodyCell key={`row-${index}-col-1`} renderStatus={game?.renderStatus}>
                     <NormalText text={game?.gameId} />
                   </TableBodyCell>,
-                  //
-                  <TableBodyCell key={`row-${index}-col-2`}>
+                  // prettier-ignore
+                  <TableBodyCell key={`row-${index}-col-2`} renderStatus={game?.renderStatus}>
                     <NormalText text={game.gameName} />
                   </TableBodyCell>,
-                  //
-                  <TableBodyCell key={`row-${index}-col-3`}>
+                  // prettier-ignore
+                  <TableBodyCell key={`row-${index}-col-3`} renderStatus={game?.renderStatus}>
                     <Link
-                      href={`games/${game.gameId}/slots`}
+                      href={`${game?.renderStatus === "deleted" ? '#': `games/${game.gameId}/slots`}`}
                       className="px-3 py-1 rounded-md bg-sky-600 text-white hover:bg-sky-800"
                       title="Open Slots"
                     >
                       Slots
                     </Link>
                   </TableBodyCell>,
-                  //
-                  <TableBodyCell key={`row-${index}-col-4`}>
+                  // prettier-ignore
+                  <TableBodyCell key={`row-${index}-col-4`} renderStatus={game?.renderStatus}>
                     <div className="inline-flex gap-4 w-full items-center justify-start">
                       {/* prettier-ignore */}
-                      <Button classsName="w-7" title="Edit" 
+                      <Button classsName="w-7" title="Edit" disabled={game?.renderStatus === "deleted"}
                         onClick={() => dispatch({ type: "EDIT_GAME_MODAL", gamePaylod: game })}>
                         <EditIcon />
                       </Button>
                       {/* prettier-ignore */}
-                      <Button classsName="w-7" title="Delete" 
+                      <Button classsName="w-7" title="Delete" disabled={game?.renderStatus === "deleted"}
                         onClick={() =>dispatch({type: "DELETE_GAME_MODAL",gamePaylod: game,})}>
                         <DeleteIcon />
                       </Button>
@@ -164,17 +169,18 @@ const AdminGames = () => {
       </div>
 
       {/* modal */}
+      {/* prettier-ignore */}
       <ModalHOC key={"addGameModal"} show={state.modals.addGame.show}>
-        <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame}/>
       </ModalHOC>
       <ModalHOC key={"editGameModal"} show={state.modals.editGame.show}>
         {/* prettier-ignore */}
-        <EditGame game={state.modals.editGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <EditGame game={state.modals.editGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame} />
       </ModalHOC>
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.deleteGame.show}>
         {/* prettier-ignore */}
-        <DeleteGame game={state.modals.deleteGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <DeleteGame game={state.modals.deleteGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame}/>
       </ModalHOC>
     </>
   );
@@ -306,6 +312,12 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
       return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false}, deleteGame: {show: false}} };
     case "SET_MESSAGES": 
       return {...state, messages: action?.paylod ?? ""};
+    case "UPDATE_GAME":
+      return {...state, page: {...state.page, content:state.page.content.map((g) => (g.gameId === action?.gamePaylod?.gameId)&&action?.gamePaylod ? {...g, ...action.gamePaylod} : g)}}
+    case "APPEND_GAME":
+      if(action?.gamePaylod)
+        return {...state, page: {...state.page, content:[...state.page.content, action?.gamePaylod]}};
+      return state;
     case "SET_PAGE": 
       if(action?.pagePaylod)
         return {...state, page: action?.pagePaylod};

@@ -2,7 +2,8 @@ declare type Game = {
     gameId: number;
     gameName: string;
     image: string;
-    slots?: Array<Slot>
+    slots?: Array<Slot>;
+    renderStatus?: string
 }
 
 declare type Slot = {
@@ -11,7 +12,8 @@ declare type Slot = {
     startTime: string,
     endTime: string,
     location: string,
-    gameId: number
+    gameId: number;
+    renderStatus?: string
 }
 
 declare type Booking = {

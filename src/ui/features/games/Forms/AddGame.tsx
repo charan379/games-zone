@@ -9,10 +9,11 @@ import React, { useState } from "react";
 
 interface Props {
   close: () => void;
+  onSuccess: (game: Game, actionType: "UPDATE_GAME" | "APPEND_GAME") => void;
 }
 
 const AddGame: React.FC<Props> = (props) => {
-  const { close } = props;
+  const { close, onSuccess } = props;
 
   const { data: session, status: authStatus } = useSession();
 
@@ -26,8 +27,9 @@ const AddGame: React.FC<Props> = (props) => {
 
     addGame({ gameName } as Game, session?.auth?.token)
       .then((res) => {
-        if (res.ok && res.result) {
+        if (res.ok && res?.result) {
           setMessages(JSON.stringify(res?.result));
+          onSuccess({ ...res.result, renderStatus: "new" }, "APPEND_GAME");
         } else {
           setMessages(res?.error?.errorMessage ?? "Somthing went wrong !");
         }
@@ -51,7 +53,7 @@ const AddGame: React.FC<Props> = (props) => {
           placeholder="Game Name"
           value={gameName}
         />
-        <div className="flex justify-between items-baseline">
+        <div className="flex mt-4 justify-between items-baseline">
           <Button rounded="rounded-md" key={`ad-1`} type="submit">
             Submit
           </Button>
@@ -61,8 +63,8 @@ const AddGame: React.FC<Props> = (props) => {
               Close
             </Button>
         </div>
+        <div className="mt-4 text-sm">{messages}</div>
       </form>
-      <div className="text-sm">{messages}</div>
     </ModalLayout>
   );
 };
