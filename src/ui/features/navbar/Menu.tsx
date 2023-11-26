@@ -1,22 +1,14 @@
-'use client';
+"use client";
 
 import React from "react";
 import MenuItem from "../../components/navbar/MenuItem";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { signOut, useSession } from 'next-auth/react';
-
-// const ThemeSwitcher = dynamic(() => import("@/ui/features/theme/ThemeSwitcher").then(module => module.ThemeSwitcher), {
-//   loading: () => <>Theme</>,
-//   ssr: false,
-// })
+import { signOut, useSession } from "next-auth/react";
 
 const Menu = () => {
   const links = [
     { label: "Home", href: process.env.NEXT_PUBLIC_BASE_URL as string },
-    { label: "Link 2", href: "#" },
-    { label: "Link 4", href: "#" },
-    { label: "Link 4", href: "#" },
+    { label: "Book Slot", href: "/games" },
+    { label: "My Bookings", href: "/bookings" },
   ];
 
   const { data: session, status: authStatus } = useSession();
@@ -31,19 +23,29 @@ const Menu = () => {
         );
       })}
 
+      {/* admin */}
+      {authStatus === "authenticated" &&
+      session.user.roles.includes("ROLE_ADMIN") ? (
+        <>
+          <li key={links.length + 3}>
+            <MenuItem href="/admin" label="Admin Dashboard" />
+          </li>
+        </>
+      ) : (
+        ""
+      )}
       {/* auth options */}
-      {
-        authStatus === 'authenticated' ?
-          <li key={links.length + 2}>
+      {authStatus === "authenticated" ? (
+        <li key={links.length + 2}>
+          <MenuItem>
             <button onClick={() => signOut()}>Sign Out</button>
-          </li>
-          :
-          <li key={links.length + 1}>
-            <Link href={"/login"}>Sign In</Link>
-          </li>
-      }
-
-
+          </MenuItem>
+        </li>
+      ) : (
+        <li key={links.length + 1}>
+          <MenuItem href="/login" label="Sign In" />
+        </li>
+      )}
     </ul>
   );
 };

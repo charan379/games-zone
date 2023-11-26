@@ -50,8 +50,8 @@ export const authOptions: AuthOptions = {
                 token.userName = user?.userName,
                     token.roles = user?.roles,
                     token.status = user?.status,
-                    token.accessToken = user?.accessToken
-                token.loginDate = new Date();
+                    token.accessToken = user?.accessToken,
+                    token.loginDate = new Date();
             }
             return token;
         },
