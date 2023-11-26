@@ -48,7 +48,7 @@ const BookingCard: React.FC<Props> = (props) => {
         )}
         {/* Actions */}
         {booking.bookingStatus === "REQUESTED" && (
-          <div className="flex flex-col sm:flex-row px-2 py-2 sm:gap-5 bg-gray-50 rounded-md shadow-sm">
+          <div className="flex flex-col sm:flex-row px-2 py-2 gap-3 sm:gap-5 bg-gray-50 rounded-md shadow-sm">
             <Button
               success
               rounded={"rounded-md"}

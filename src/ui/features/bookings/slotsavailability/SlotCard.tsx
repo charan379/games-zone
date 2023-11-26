@@ -10,7 +10,7 @@ const SlotCard: React.FC<SlotAvailabilityRecord> = ({
   forDate,
 }) => {
   return (
-    <div className="max-w-[160px] cursor-pointer rounded-md">
+    <div className="max-w-[160px] mt-4 cursor-pointer rounded-md">
       {/* prettier-ignore */}
       <Button disabled={isBooked} rounded="rounded-lg" danger={isBooked} success={!isBooked} title={isBooked? "Not Available" : `Book Slot for ${forDate}`}>
         <h2 className="text-lg font-semibold mb-2">{slot.slotName}</h2>
