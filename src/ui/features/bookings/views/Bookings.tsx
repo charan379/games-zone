@@ -183,9 +183,9 @@ const sortOptions: { label: string; value: any }[] = [
 ];
 
 const includeOptions: { label: string; value: string }[] = [
-  { label: "Slot Detaisl", value: "slot" },
+  { label: "Slot Details", value: "slot" },
   { label: "User Details", value: "user" },
-  { label: "Game Detaisl", value: "game" },
+  { label: "Game Details", value: "game" },
 ];
 interface ComponentState {
   messages: string;
