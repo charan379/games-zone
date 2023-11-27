@@ -9,6 +9,8 @@ import { useSession } from "next-auth/react";
 import DateInput from "@/ui/components/form/DateInput";
 import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
 import SlotLocationsHOC from "../slotsavailability/SlotLocationsHOC";
+import ModalHOC from "@/ui/components/Modal/ModalHOC";
+import SuccessCard from "../SuccessCard";
 
 interface Props {
   gameId: number;
@@ -31,11 +33,14 @@ const SlotsAvailability: React.FC<Props> = (props) => {
     return bookSlotRequest({ forDate: forDate, gameId: slot.gameId, slotId: slot.slotId, userId: session?.user.userId as number }, session?.auth?.token)
       .then((res: GZResponse<Booking>) => {
         if (res.ok && res.result) {
+          dispatch({ type: "INFO_MODAL", paylod: `Successfull booked with id : ${res.result.bookingId}` })
           return true
         } else {
+          dispatch({ type: "INFO_MODAL", paylod: res?.error?.errorMessage ?? "Somthing went wrong !" })
           return false
         }
       }).catch(err => {
+        dispatch({ type: "INFO_MODAL", paylod: "Somthing went wrong !" })
         return false;
       })
   }
@@ -102,6 +107,11 @@ const SlotsAvailability: React.FC<Props> = (props) => {
           {state.messages}
         </span>
       </SlotLocationsHOC>
+
+      <ModalHOC key={"deleteGameModal"} show={state.modals.infoCard.show}>
+        {/* prettier-ignore */}
+        <SuccessCard messages={state.modals.infoCard.messages} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+      </ModalHOC>
     </div>
   );
 };
@@ -135,6 +145,9 @@ interface StateAction {
 }
 
 interface ComponentState {
+  modals: {
+    infoCard: { show: boolean, messages: string };
+  };
   messages: string;
   slotsRecord: Record<string, SlotAvailabilityRecord[]>;
   query: { forDate: string };
@@ -142,6 +155,9 @@ interface ComponentState {
 }
 
 const initialState: ComponentState = {
+  modals: {
+    infoCard: { show: false, messages: "" }
+  },
   messages: "",
   slotsRecord: {},
   query: { forDate: "today" },
@@ -151,6 +167,10 @@ const initialState: ComponentState = {
 // prettier-ignore
 function reducer(state: ComponentState, action: StateAction): ComponentState {
   switch (action.type) {
+    case "INFO_MODAL":
+      return { ...state, modals: { ...state.modals, infoCard: { show: true, messages: action.paylod } } };
+    case "CLOSE_MODALS":
+      return { ...state, modals: { ...state.modals, infoCard: { show: false, messages: "" } } };
     case "SET_MESSAGES":
       return { ...state, messages: action?.paylod ?? "" };
     case "SET_SLOT_RECORD":
