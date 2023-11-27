@@ -57,6 +57,9 @@ declare type GameQuery = {
 }
 
 declare type BookingQuery = {
+    gameId: string,
+    userId: string,
+    status: string,
     forDate: string,
     limit: number,
     include: string,

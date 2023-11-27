@@ -9,6 +9,8 @@ import BookingCard from "../bookingcard/BookingCard";
 import TableFooter from "@/ui/components/table/TableFooter";
 import CheckboxGroup from "@/ui/components/form/CheckboxGroup";
 import DateInput from "@/ui/components/form/DateInput";
+import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
+import TextInput from "@/ui/components/form/TextInput";
 
 const Bookings = () => {
   const { data: session, status: authStatus } = useSession();
@@ -18,14 +20,18 @@ const Bookings = () => {
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     event.preventDefault();
-    dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
+    dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
   };
 
   // prettier-ignore
   const handleIncludesChange = (obj: object) => {
-    dispatch({type: "SET_QUERY", queryPaylod: {...state.query, include: Object.entries(obj).map(([value, isChecked]) => {
-       if(isChecked) return value; 
-    }).join(",") }})
+    dispatch({
+      type: "SET_QUERY", queryPaylod: {
+        ...state.query, include: Object.entries(obj).map(([value, isChecked]) => {
+          if (isChecked) return value;
+        }).join(",")
+      }
+    })
 
   };
 
@@ -34,7 +40,7 @@ const Bookings = () => {
   };
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -47,6 +53,7 @@ const Bookings = () => {
         if (res.ok && res.result) {
           dispatch({ type: "SET_PAGE", pagePaylod: res.result });
         } else {
+          dispatch({ type: "SET_PAGE", pagePaylod: initialState.page });
           dispatch({
             type: "SET_MESSAGES",
             paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !",
@@ -60,7 +67,7 @@ const Bookings = () => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -72,9 +79,9 @@ const Bookings = () => {
               Bookings
             </h2>
           </div>
-          <div className="flex sm:flex-row flex-col justify-between items-center">
-            <div className="my-2 flex sm:flex-row flex-col">
-              <div className="flex flex-row mb-1 sm:mb-0">
+          <div className="flex  flex-col md:flex-row justify-between items-center gap-4">
+            <div className="my-2 flex-col md:flex-row">
+              <div className="flex flex-col md:flex-row mb-1 sm:mb-0">
                 {/*  */}
                 <SelectInput
                   label="Limit"
@@ -93,21 +100,31 @@ const Bookings = () => {
                   onChange={(e) => handleQueryChange(e)}
                   rounded=""
                 />
-                <CheckboxGroup
-                  label="Include Details Of"
-                  onChange={handleIncludesChange}
-                  options={includeOptions}
+                <SelectInput
+                  label="Status"
+                  name="status"
+                  value={state.query.status}
+                  options={statusOptions}
+                  onChange={handleQueryChange}
                   rounded="rounded-none"
                 />
                 <DateInput
-                  name={""}
-                  value={""}
-                  onChange={() => {}}
-                  rounded={"rounded-r"}
+                  name={"forDate"}
+                  value={state.query.forDate}
+                  onChange={handleQueryChange}
+                  rounded={"rounded-none"}
                 />
+                <TextInput name="userId" onChange={handleQueryChange} rounded="rounded-none" type="Search" placeholder="User ID" value={state.query.userId} key={1} />
+                <TextInput name="gameId" onChange={handleQueryChange} rounded="rounded-r" type="Search" placeholder="Game ID" value={state.query.gameId} key={2} />
               </div>
               {/*  */}
             </div>
+            <CheckboxGroup
+              label="Include Details Of"
+              onChange={handleIncludesChange}
+              options={includeOptions}
+              rounded="rounded-md"
+            />
           </div>
           {/* bookings */}
           <BookingListHOC loading={state.loading}>
@@ -150,7 +167,7 @@ async function fetchBookings(
 ): Promise<GZResponse<GZPage<Partial<Booking>>>> {
   return gzRequest<BookingQuery, null, GZPage<Partial<Booking>>>({
     requestMethod: "GET",
-    requestQuery: query,
+    requestQuery: { ...query, forDate: convertToLocaleDate(query.forDate) },
     requestUrl: "http://localhost:3333/api/booking/search",
     authToken: authToken,
   });
@@ -171,14 +188,53 @@ const limitOptions: { label: string; value: any }[] = [
   },
 ];
 
+const statusOptions: { label: string; value: any }[] = [
+  {
+    label: "Status - Any",
+    value: "",
+  },
+  {
+    label: "Requested",
+    value: "REQUESTED",
+  },
+  {
+    label: "Approved",
+    value: "APPROVED",
+  },
+  {
+    label: "Cancelled",
+    value: "CANCELLED",
+  },
+  {
+    label: "Rejected",
+    value: "REJECTED",
+  },
+];
+
 const sortOptions: { label: string; value: any }[] = [
   {
     label: "ForDate - ASC",
-    value: "forDate.asc",
+    value: "for_date.asc",
   },
   {
     label: "ForDate - DESC",
-    value: "forDate.desc",
+    value: "for_date.desc",
+  },
+  {
+    label: "TransactionDate - ASC",
+    value: "transaction_date.asc",
+  },
+  {
+    label: "TransactionDate - DESC",
+    value: "transaction_date.desc",
+  },
+  {
+    label: "Booking Id - ASC",
+    value: "booking_id.asc",
+  },
+  {
+    label: "Booking Id - DESC",
+    value: "booking_id.desc",
   },
 ];
 
@@ -213,11 +269,14 @@ const initialState: ComponentState = {
     empty: true,
   },
   query: {
+    userId: "",
+    gameId: "",
+    status: "",
     forDate: "",
     limit: 5,
     include: "game,user,slot",
     pageNo: 0,
-    sort: "forDate.asc",
+    sort: "for_date.asc",
   },
   loading: true,
 };
@@ -233,27 +292,27 @@ interface StateAction {
 // prettier-ignore
 function reducer(state: ComponentState, action: StateAction): ComponentState {
   switch (action.type) {
-    case "SET_MESSAGES": 
-      return {...state, messages: action?.paylod ?? ""};
-    case "SET_PAGE": 
-      if(action?.pagePaylod)
-        return {...state, page: action?.pagePaylod};
+    case "SET_MESSAGES":
+      return { ...state, messages: action?.paylod ?? "" };
+    case "SET_PAGE":
+      if (action?.pagePaylod)
+        return { ...state, page: action?.pagePaylod };
       return state;
     case "UPDATE_BOOKING":
-        return {...state, page: {...state.page, content:state.page.content.map((b) => (b.bookingId === action?.bookingPayload?.bookingId)&&action?.bookingPayload ? {...b, ...action.bookingPayload} : b)}}
-    case "SET_QUERY": 
-      if(action?.queryPaylod) {
+      return { ...state, page: { ...state.page, content: state.page.content.map((b) => (b.bookingId === action?.bookingPayload?.bookingId) && action?.bookingPayload ? { ...b, ...action.bookingPayload } : b) } }
+    case "SET_QUERY":
+      if (action?.queryPaylod) {
         const prevPage = state.query.pageNo;
         const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
-        return {...state,query: {...state.query, ...action.queryPaylod, pageNo}}
+        return { ...state, query: { ...state.query, ...action.queryPaylod, pageNo } }
       }
       return state;
-    case "NEXT_PAGE": 
-      return {...state, query: {...state.query, pageNo: state.query.pageNo + 1}};
-    case "PREV_PAGE": 
-      return {...state, query: {...state.query, pageNo: state.query.pageNo - 1}};
+    case "NEXT_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo + 1 } };
+    case "PREV_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo - 1 } };
     case "LOADING":
-      return {...state, loading: action.paylod ?? false};
+      return { ...state, loading: action.paylod ?? false };
     default:
       return state;
   }

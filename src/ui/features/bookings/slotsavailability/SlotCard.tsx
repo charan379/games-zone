@@ -12,7 +12,7 @@ const SlotCard: React.FC<SlotAvailabilityRecord> = ({
   return (
     <div className="max-w-[160px] mt-4 cursor-pointer rounded-md">
       {/* prettier-ignore */}
-      <Button disabled={isBooked} rounded="rounded-lg" danger={isBooked} success={!isBooked} title={isBooked? "Not Available" : `Book Slot for ${forDate}`}>
+      <Button disabled={isBooked} rounded="rounded-lg" danger={isBooked} success={!isBooked} title={isBooked ? "Not Available" : `Book Slot for ${forDate}`}>
         <h2 className="text-lg font-semibold mb-2">{slot.slotName}</h2>
         <p className="text-xs mb-2 font-semibold">
           {`${convertTo12HourFormat(slot.startTime)} - ${convertTo12HourFormat(

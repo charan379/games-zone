@@ -20,7 +20,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
 
   if (originalDate === "today") {
     const d = new Date(Date.now());
-    formattedDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    formattedDate = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
   } else {
     formattedDate = originalDate;
   }
