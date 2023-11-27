@@ -1,5 +1,5 @@
 import React from "react";
-import BookingCardLoadingSkeleton from "./booking-card/components/BookingCardLoadingSkeleton";
+import BookingCardLoadingSkeleton from "../../bookings-module/components/booking-card/components/BookingCardLoadingSkeleton";
 
 interface Props {
   loading: boolean;

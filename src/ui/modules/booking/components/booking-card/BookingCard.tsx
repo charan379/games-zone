@@ -1,9 +1,9 @@
 import Button from "@/ui/components/common/Button";
 import React from "react";
-import BookingCardSection from "./components/BookingCardSection";
-import BookingDetailsSection from "./components/BookingDetailsSection";
-import SlotDetailsSection from "./components/SlotDetailsSection";
-import UserDetailsSection from "./components/UserDetailsSection";
+import BookingCardSection from "../../../bookings-module/components/booking-card/components/BookingCardSection";
+import BookingDetailsSection from "../../../bookings-module/components/booking-card/components/BookingDetailsSection";
+import SlotDetailsSection from "../../../bookings-module/components/booking-card/components/SlotDetailsSection";
+import UserDetailsSection from "../../../bookings-module/components/booking-card/components/UserDetailsSection";
 
 interface Props {
   booking: Partial<Booking>;
