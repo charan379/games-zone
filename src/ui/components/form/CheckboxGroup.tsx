@@ -8,15 +8,16 @@ interface Props {
   options: { label: string; value: string }[];
   label: string;
   rounded?: string;
+  initialState?: { [key: string]: boolean };
 }
 
 const CheckboxGroup: React.FC<Props> = (props) => {
-  const { onChange, options, label, rounded } = props;
+  const { onChange, options, label, rounded, initialState } = props;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
-    {}
+    initialState ? initialState : {}
   );
 
   const handleToggleDropdown = () => {

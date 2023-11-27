@@ -1,5 +1,5 @@
 import React from "react";
-import SearchIcon from "../common/SearchIcon";
+import SearchIcon from "../common/icons/SearchIcon";
 
 interface Props {
   label?: string;

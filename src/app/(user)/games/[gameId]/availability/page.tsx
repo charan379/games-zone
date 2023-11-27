@@ -1,4 +1,4 @@
-import SlotsAvailability from "@/ui/modules/slots-module/views/SlotsAvailability";
+import SlotsAvailability from "@/ui/modules/slot/views/SlotsAvailability";
 
 interface Props {
   params: { gameId: number };

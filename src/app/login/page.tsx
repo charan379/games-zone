@@ -1,4 +1,4 @@
-import Login from "@/ui/modules/login-module/views/Login";
+import Login from "@/ui/modules/user/views/Login";
 
 export default function LoginPage() {
 
