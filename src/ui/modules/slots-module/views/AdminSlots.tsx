@@ -13,9 +13,9 @@ import TableFooter from "@/ui/components/table/TableFooter";
 import TableHOC from "@/ui/components/table/TableHOC";
 import { useSession } from "next-auth/react";
 import React, { useReducer, useEffect } from "react";
-import AddSlot from "../forms/AddSlot";
-import EditSlot from "../forms/EditSlot";
-import DeleteSlot from "../forms/DeleteSlot";
+import AddSlot from "../features/AddSlot";
+import EditSlot from "../features/EditSlot";
+import DeleteSlot from "../features/DeleteSlot";
 import convertTo12HourFormat from "@/lib/utils/convertTo12HrFormat";
 
 interface Props {

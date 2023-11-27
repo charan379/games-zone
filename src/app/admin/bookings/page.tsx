@@ -1,4 +1,4 @@
-import Bookings from "@/ui/features/bookings/views/Bookings";
+import Bookings from "@/ui/modules/bookings-module/views/Bookings";
 
 export default function UserBookingspage() {
   return (

@@ -1,4 +1,4 @@
-import AdminGames from "@/ui/features/games/views/AdminGames";
+import AdminGames from "@/ui/modules/games-module/views/AdminGames";
 
 export default function Games() {
   return (

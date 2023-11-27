@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useReducer } from "react";
-import AddGame from "@/ui/features/games/Forms/AddGame";
+import AddGame from "@/ui/modules/games-module/features/AddGame";
 import { useSession } from "next-auth/react";
 import gzRequest from "@/lib/utils/gzRequest";
 import Table from "@/ui/components/table/Table";
@@ -14,8 +14,8 @@ import TableBodyCell from "@/ui/components/table/TableBodyCell";
 import ModalHOC from "@/ui/components/Modal/ModalHOC";
 import EditIcon from "@/ui/components/common/icons/EditIcon";
 import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
-import EditGame from "../Forms/EditGame";
-import DeleteGame from "../Forms/DeleteGame";
+import EditGame from "../features/EditGame";
+import DeleteGame from "../features/DeleteGame";
 import Link from "next/link";
 
 const AdminGames = () => {

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/ui/features/theme-provider";
-import Navbar from "@/ui/features/navbar/Navbar";
+import Navbar from "@/ui/modules/navbar-module/Navbar";
 import NextAuthContext from "@/lib/nextauth/NextAuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,7 +23,6 @@ export default function RootLayout({
       >
         <>
 
-          {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
           <NextAuthContext>
             <Navbar />
             {/* container */}
@@ -32,7 +30,6 @@ export default function RootLayout({
               {children}
             </div>
           </NextAuthContext>
-          {/* </ThemeProvider> */}
         </>
       </body>
     </html>

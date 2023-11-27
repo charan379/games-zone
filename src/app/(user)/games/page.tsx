@@ -1,4 +1,4 @@
-import UserGames from "@/ui/features/games/views/UserGames";
+import UserGames from "@/ui/modules/games-module/views/UserGames";
 
 export default function UserGamesPage() {
   return (

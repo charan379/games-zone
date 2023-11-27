@@ -1,4 +1,4 @@
-import AdminSlots from "@/ui/features/slots/views/AdminSlots";
+import AdminSlots from "@/ui/modules/slots-module/views/AdminSlots";
 
 interface Props {
   params: { gameId: number };

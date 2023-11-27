@@ -3,7 +3,7 @@
 import gzRequest from "@/lib/utils/gzRequest";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useReducer } from "react";
-import SearchForm from "../Forms/GameSearchFrom";
+import SearchForm from "../features/GameSearchFrom";
 import GameCard from "@/ui/components/games/cards/GameCard";
 
 const UserGames = () => {
