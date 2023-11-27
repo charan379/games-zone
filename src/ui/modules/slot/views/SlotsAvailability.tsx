@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useReducer } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { groupByInnerObjectField } from "@/lib/utils/groupBy";
 import SlotCard from "../components/SlotCard";
 import SlotLocation from "../components/SlotLocation";
@@ -29,19 +30,21 @@ const SlotsAvailability: React.FC<Props> = (props) => {
     dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
   };
 
+  // prettier-ignore
   function bookSlot(slot: Slot, forDate: string): Promise<boolean> {
+    dispatch({type: "INFO_MODAL",paylod: {message: `Submitting booking request...`,isLoading: true}});
     // prettier-ignore
     return bookSlotRequest({ forDate: forDate, gameId: slot.gameId, slotId: slot.slotId, userId: session?.user.userId as number }, session?.auth?.token)
       .then((res: GZResponse<Booking>) => {
         if (res.ok && res.result) {
-          dispatch({ type: "INFO_MODAL", paylod: `Successfull booked with id : ${res.result.bookingId}` })
+          dispatch({ type: "INFO_MODAL", paylod: {message: `Successfully submitted with id : ${res.result.bookingId}`, isLoading: false} })
           return true
         } else {
-          dispatch({ type: "INFO_MODAL", paylod: res?.error?.errorMessage ?? "Somthing went wrong !" })
+          dispatch({ type: "INFO_MODAL", paylod: {message: res?.error?.errorMessage ?? "Somthing went wrong !", isLoading: false} })
           return false
         }
       }).catch(err => {
-        dispatch({ type: "INFO_MODAL", paylod: "Somthing went wrong !" })
+        dispatch({ type: "INFO_MODAL", paylod: {message: "Somthing went wrong !", isLoading: false} })
         return false;
       })
   }
@@ -51,18 +54,21 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
-    }, 150);
+    }, 10);
 
     dispatch({ type: "SET_MESSAGES", paylod: "" });
 
     // prettier-ignore
     fetchSlotAvailabilityRecords(state.query, gameId, session?.auth?.token)
       .then((res: GZResponse<SlotAvailabilityRecord[]>) => {
-        if (res.ok && res.result) {
+        if (res?.ok && res?.result) {
           dispatch({ type: "SET_SLOT_RECORD", slotsRecordPayload: groupByInnerObjectField(res.result, "slot.location") });
-          if (res.result.length === 0)
+          if (res.result.length === 0) {
+            dispatch({ type: "SET_SLOT_RECORD", slotsRecordPayload: {} });
             dispatch({ type: "SET_MESSAGES", paylod: "No Slots found for given query !" });
+          }
         } else {
+          dispatch({ type: "SET_SLOT_RECORD", slotsRecordPayload: {} });
           dispatch({ type: "SET_MESSAGES", paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !" });
         }
       })
@@ -90,14 +96,14 @@ const SlotsAvailability: React.FC<Props> = (props) => {
           label="Booking For Date [Default: Current Date]"
         />
       </div>
-      <SlotLocationsHOC isLoading={state.loading}>
+      <SlotLocationsHOC isLoading={state.loading} key={uuidv4()}>
         {Object.keys(state.slotsRecord).map((location, index) => {
           return (
             // prettier-ignore
-            <SlotLocation location={location} key={index}>
-              {Object.values(state.slotsRecord)[index]?.map((saRecord, sarindex) => {
+            <SlotLocation location={location} key={uuidv4()}>
+              {Object.values(state.slotsRecord)[index]?.map((saRecord) => {
                 return (
-                  <SlotCard handleClick={bookSlot} key={sarindex} slotRecord={saRecord}
+                  <SlotCard handleClick={bookSlot} key={uuidv4()} slotRecord={saRecord}
                   />
                 );
               })}
@@ -111,7 +117,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.infoCard.show}>
         {/* prettier-ignore */}
-        <InfoCard messages={state.modals.infoCard.messages} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <InfoCard messages={state.modals.infoCard.messages} close={() => dispatch({ type: "CLOSE_MODALS" })} isLoading={state.modals.infoCard.isLoading} />
       </ModalHOC>
     </div>
   );
@@ -138,7 +144,7 @@ interface StateAction {
 
 interface ComponentState {
   modals: {
-    infoCard: { show: boolean; messages: string };
+    infoCard: { show: boolean; messages: string; isLoading: boolean };
   };
   messages: string;
   slotsRecord: Record<string, SlotAvailabilityRecord[]>;
@@ -148,7 +154,7 @@ interface ComponentState {
 
 const initialState: ComponentState = {
   modals: {
-    infoCard: { show: false, messages: "" },
+    infoCard: { show: false, messages: "", isLoading: false },
   },
   messages: "",
   slotsRecord: {},
@@ -160,9 +166,9 @@ const initialState: ComponentState = {
 function reducer(state: ComponentState, action: StateAction): ComponentState {
   switch (action.type) {
     case "INFO_MODAL":
-      return { ...state, modals: { ...state.modals, infoCard: { show: true, messages: action.paylod } } };
+      return { ...state, modals: { ...state.modals, infoCard: { show: true, messages: action?.paylod?.message, isLoading:action?.paylod?.isLoading  } } };
     case "CLOSE_MODALS":
-      return { ...state, modals: { ...state.modals, infoCard: { show: false, messages: "" } } };
+      return { ...state, modals: { ...state.modals, infoCard: { show: false, messages: "", isLoading: false } } };
     case "SET_MESSAGES":
       return { ...state, messages: action?.paylod ?? "" };
     case "SET_SLOT_RECORD":

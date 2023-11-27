@@ -11,9 +11,8 @@ const Spinner: React.FC<SpinnerProps> = ({ className, height, width }) => {
   return (
     <svg
       role="status"
-      className={`inline ${height ?? " h-6 "} ${
-        width ?? " w-8 "
-      }animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-purple-600 ${className}`}
+      className={`inline ${height ? height : "h-6"} ${width ? width : "w-8"}
+       animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-purple-600 ${className}`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

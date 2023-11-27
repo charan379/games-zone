@@ -17,10 +17,8 @@ const InfoCard: React.FC<Props> = (props) => {
       <form className="px-8 py-6 text-center">
         <div className="mt-4 text-sm"></div>
         <div className="flex flex-col gap-3 mt-4 justify-between items-center">
-          {true && <Spinner height="h-20" width="w-20" />}
-          <div className="p-2 mt-2">
-            {isLoading ? loadingText ?? "Loading...." : messages}
-          </div>
+          {isLoading && <Spinner height="h-20" width="w-20" />}
+          <div className="p-2 mt-2">{messages}</div>
           <Button
             rounded="rounded-md"
             danger
