@@ -58,7 +58,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="relative flex min-h-screen lg:min-h-max text-gray-800 antialiased flex-col justify-center overflow-hidden py-6 sm:py-12">
-      <ModalLayout label="Login to your account !">
+      <ModalLayout label={`${searchParams?.get("message") ?? "Login to your account !"}`}>
         <form className="px-8 py-6 " onSubmit={handleSubmit}>
           <label className="block font-semibold"> Username </label>
           <input
