@@ -22,12 +22,26 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      event.preventDefault();
-      dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
-    };
+    event.preventDefault();
+    dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
+  };
+
+  function bookSlot(slot: Slot, forDate: string): Promise<boolean> {
+    // prettier-ignore
+    return bookSlotRequest({ forDate: forDate, gameId: slot.gameId, slotId: slot.slotId, userId: session?.user.userId as number }, session?.auth?.token)
+      .then((res: GZResponse<Booking>) => {
+        if (res.ok && res.result) {
+          return true
+        } else {
+          return false
+        }
+      }).catch(err => {
+        return false;
+      })
+  }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -39,11 +53,11 @@ const SlotsAvailability: React.FC<Props> = (props) => {
     fetchSlotAvailabilityRecords(state.query, gameId, session?.auth?.token)
       .then((res: GZResponse<SlotAvailabilityRecord[]>) => {
         if (res.ok && res.result) {
-          dispatch({type: "SET_SLOT_RECORD",slotsRecordPayload: groupByInnerObjectField(res.result, "slot.location")});
+          dispatch({ type: "SET_SLOT_RECORD", slotsRecordPayload: groupByInnerObjectField(res.result, "slot.location") });
           if (res.result.length === 0)
-            dispatch({type: "SET_MESSAGES",paylod: "No Slots found for given query !"});
+            dispatch({ type: "SET_MESSAGES", paylod: "No Slots found for given query !" });
         } else {
-          dispatch({type: "SET_MESSAGES",paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !"});
+          dispatch({ type: "SET_MESSAGES", paylod: res?.error?.errorMessage ?? "Somthing Went Wrong !" });
         }
       })
       .finally(() => {
@@ -53,7 +67,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -75,13 +89,13 @@ const SlotsAvailability: React.FC<Props> = (props) => {
           return (
             // prettier-ignore
             <SlotLocation location={location} key={index}>
-            {Object.values(state.slotsRecord)[index]?.map((saRecord, sarindex) => {
-              return (
-                <SlotCard key={sarindex} slot={saRecord.slot} forDate={saRecord.forDate} isBooked={saRecord.isBooked}
-                />
-              );
-            })}
-          </SlotLocation>
+              {Object.values(state.slotsRecord)[index]?.map((saRecord, sarindex) => {
+                return (
+                  <SlotCard handleClick={bookSlot} key={sarindex} slotRecord={saRecord}
+                  />
+                );
+              })}
+            </SlotLocation>
           );
         })}
         <span className="text-lg xs:text-base text-gray-900">
@@ -95,15 +109,24 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 export default SlotsAvailability;
 
 // prettier-ignore
-async function fetchSlotAvailabilityRecords(query: { forDate: string },gameId: number,authToken?: string): Promise<GZResponse<SlotAvailabilityRecord[]>> {
+async function fetchSlotAvailabilityRecords(query: { forDate: string }, gameId: number, authToken?: string): Promise<GZResponse<SlotAvailabilityRecord[]>> {
   return gzRequest<{ forDate: string }, null, SlotAvailabilityRecord[]>({
     requestMethod: "GET",
-    requestQuery: {...query, forDate: convertToLocaleDate(query.forDate)},
+    requestQuery: { ...query, forDate: convertToLocaleDate(query.forDate) },
     requestUrl: `http://localhost:3333/api/booking/game/${gameId}/slots/availability`,
     authToken: authToken,
   });
 }
 
+interface BookingReqBoby { forDate: string, slotId: number, gameId: number, userId: number };
+async function bookSlotRequest(body: BookingReqBoby, authToken?: string) {
+  return gzRequest<null, BookingReqBoby, Booking>({
+    requestUrl: "http://localhost:3333/api/booking",
+    requestMethod: "POST",
+    requestBoby: body,
+    authToken: authToken,
+  })
+}
 interface StateAction {
   type: string;
   paylod?: any;
@@ -128,18 +151,18 @@ const initialState: ComponentState = {
 // prettier-ignore
 function reducer(state: ComponentState, action: StateAction): ComponentState {
   switch (action.type) {
-    case "SET_MESSAGES": 
-      return {...state, messages: action?.paylod ?? ""};
-    case "SET_SLOT_RECORD": 
-      if(action?.slotsRecordPayload)
-        return {...state, slotsRecord: action?.slotsRecordPayload};
+    case "SET_MESSAGES":
+      return { ...state, messages: action?.paylod ?? "" };
+    case "SET_SLOT_RECORD":
+      if (action?.slotsRecordPayload)
+        return { ...state, slotsRecord: action?.slotsRecordPayload };
       return state;
-    case "SET_QUERY": 
-      if(action?.queryPaylod)
-        return {...state,query: {...state.query, ...action.queryPaylod}}
+    case "SET_QUERY":
+      if (action?.queryPaylod)
+        return { ...state, query: { ...state.query, ...action.queryPaylod } }
       return state;
     case "LOADING":
-      return {...state, loading: action.paylod ?? false};
+      return { ...state, loading: action.paylod ?? false };
     default:
       return state;
   }
