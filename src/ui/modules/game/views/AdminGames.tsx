@@ -11,7 +11,7 @@ import Button from "@/ui/components/common/Button";
 import TableFooter from "@/ui/components/table/TableFooter";
 import TableHOC from "@/ui/components/table/TableHOC";
 import TableBodyCell from "@/ui/components/table/TableBodyCell";
-import ModalHOC from "@/ui/components/Modal/ModalHOC";
+import ModalHOC from "@/ui/components/modal/ModalHOC";
 import EditIcon from "@/ui/components/common/icons/EditIcon";
 import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditGame from "../features/EditGame";

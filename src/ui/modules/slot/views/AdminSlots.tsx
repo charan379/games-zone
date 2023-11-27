@@ -1,7 +1,6 @@
 "use client";
 
-import gzRequest from "@/lib/utils/gzRequest";
-import ModalHOC from "@/ui/components/Modal/ModalHOC";
+import ModalHOC from "@/ui/components/modal/ModalHOC";
 import Button from "@/ui/components/common/Button";
 import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditIcon from "@/ui/components/common/icons/EditIcon";

@@ -1,6 +1,6 @@
 "use client";
 
-import ModalLayout from "@/ui/components/Modal/ModalLayout";
+import ModalLayout from "@/ui/components/modal/ModalLayout";
 import Button from "@/ui/components/common/Button";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";

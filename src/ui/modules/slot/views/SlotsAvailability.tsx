@@ -9,8 +9,9 @@ import { useSession } from "next-auth/react";
 import DateInput from "@/ui/components/form/DateInput";
 import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
 import SlotLocationsHOC from "../components/SlotLocationsHOC";
-import ModalHOC from "@/ui/components/Modal/ModalHOC";
 import SuccessCard from "../../../components/common/SuccessCard";
+import ModalHOC from "@/ui/components/modal/ModalHOC";
+import bookSlotRequest from "../requests/bookSlot";
 
 interface Props {
   gameId: number;
@@ -46,7 +47,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => { };
+    if (authStatus === "loading") return () => {};
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -72,7 +73,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => { };
+    return () => {};
   }, [state.query, authStatus]);
 
   return (
@@ -128,15 +129,6 @@ async function fetchSlotAvailabilityRecords(query: { forDate: string }, gameId: 
   });
 }
 
-interface BookingReqBoby { forDate: string, slotId: number, gameId: number, userId: number };
-async function bookSlotRequest(body: BookingReqBoby, authToken?: string) {
-  return gzRequest<null, BookingReqBoby, Booking>({
-    requestUrl: "http://localhost:3333/api/booking",
-    requestMethod: "POST",
-    requestBoby: body,
-    authToken: authToken,
-  })
-}
 interface StateAction {
   type: string;
   paylod?: any;
@@ -146,7 +138,7 @@ interface StateAction {
 
 interface ComponentState {
   modals: {
-    infoCard: { show: boolean, messages: string };
+    infoCard: { show: boolean; messages: string };
   };
   messages: string;
   slotsRecord: Record<string, SlotAvailabilityRecord[]>;
@@ -156,7 +148,7 @@ interface ComponentState {
 
 const initialState: ComponentState = {
   modals: {
-    infoCard: { show: false, messages: "" }
+    infoCard: { show: false, messages: "" },
   },
   messages: "",
   slotsRecord: {},
