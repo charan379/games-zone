@@ -17,7 +17,40 @@ interface Props {
 }
 
 const Bookings: React.FC<Props> = ({ view }) => {
+
   const { data: session, status: authStatus } = useSession();
+
+  const initialState: ComponentState = {
+    messages: "",
+    page: {
+      content: [],
+      last: true,
+      totalPages: 0,
+      totalElements: 0,
+      size: 1,
+      number: 0,
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      numberOfElements: 0,
+      first: true,
+      empty: true,
+    },
+    query: {
+      userId: view === "USER" && session?.user?.userId?.toString() ? session?.user?.userId?.toString() : "",
+      gameId: "",
+      status: "",
+      forDate: "",
+      limit: 5,
+      include: "game,user,slot",
+      pageNo: 0,
+      sort: "for_date.asc",
+    },
+    loading: true,
+  };
+
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -255,37 +288,6 @@ interface ComponentState {
   query: BookingQuery;
   loading: boolean;
 }
-
-const initialState: ComponentState = {
-  messages: "",
-  page: {
-    content: [],
-    last: true,
-    totalPages: 0,
-    totalElements: 0,
-    size: 1,
-    number: 0,
-    sort: {
-      empty: false,
-      sorted: true,
-      unsorted: false,
-    },
-    numberOfElements: 0,
-    first: true,
-    empty: true,
-  },
-  query: {
-    userId: "",
-    gameId: "",
-    status: "",
-    forDate: "",
-    limit: 5,
-    include: "game,user,slot",
-    pageNo: 0,
-    sort: "for_date.asc",
-  },
-  loading: true,
-};
 
 interface StateAction {
   type: string;
