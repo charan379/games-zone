@@ -8,14 +8,15 @@ import UserDetailsSection from "./components/UserDetailsSection";
 interface Props {
   booking: Partial<Booking>;
   updateBooking: (b: Partial<Booking>) => void;
+  view: "ADMIN" | "USER";
 }
 
 const BookingCard: React.FC<Props> = (props) => {
-  const { booking, updateBooking } = props;
+  const { booking, updateBooking, view } = props;
 
   // prettier-ignore
-  const handleUpdate = (status: "APPROVED" | "REQUESTED" | "REJECTED" | "CANCELLED" ) => {
-    updateBooking({...booking, bookingStatus: status});
+  const handleUpdate = (status: "APPROVED" | "REQUESTED" | "REJECTED" | "CANCELLED") => {
+    updateBooking({ ...booking, bookingStatus: status });
   };
 
   return (
@@ -49,27 +50,27 @@ const BookingCard: React.FC<Props> = (props) => {
         {/* Actions */}
         {booking.bookingStatus === "REQUESTED" && (
           <div className="flex flex-col sm:flex-row px-2 py-2 gap-3 sm:gap-5 bg-gray-50 rounded-md shadow-sm">
-            <Button
+            {view === "ADMIN" && <Button
               success
               rounded={"rounded-md"}
               onClick={() => handleUpdate("APPROVED")}
             >
               Approve
-            </Button>
-            <Button
+            </Button>}
+            {view === 'USER' && <Button
               danger
               rounded={"rounded-md"}
               onClick={() => handleUpdate("CANCELLED")}
             >
               Cancel
-            </Button>
-            <Button
+            </Button>}
+            {view === 'ADMIN' && <Button
               danger
               rounded={"rounded-md"}
               onClick={() => handleUpdate("REJECTED")}
             >
               Reject
-            </Button>
+            </Button>}
           </div>
         )}
       </div>

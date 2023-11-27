@@ -12,7 +12,11 @@ import DateInput from "@/ui/components/form/DateInput";
 import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
 import TextInput from "@/ui/components/form/TextInput";
 
-const Bookings = () => {
+interface Props {
+  view: "ADMIN" | "USER";
+}
+
+const Bookings: React.FC<Props> = ({ view }) => {
   const { data: session, status: authStatus } = useSession();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -114,17 +118,18 @@ const Bookings = () => {
                   onChange={handleQueryChange}
                   rounded={"rounded-none"}
                 />
-                <TextInput name="userId" onChange={handleQueryChange} rounded="rounded-none" type="Search" placeholder="User ID" value={state.query.userId} key={1} />
+                {view === "ADMIN" && <TextInput name="userId" onChange={handleQueryChange} rounded="rounded-none" type="Search" placeholder="User ID" value={state.query.userId} key={1} />
+                }
                 <TextInput name="gameId" onChange={handleQueryChange} rounded="rounded-r" type="Search" placeholder="Game ID" value={state.query.gameId} key={2} />
               </div>
               {/*  */}
             </div>
-            <CheckboxGroup
+            {view === "ADMIN" && <CheckboxGroup
               label="Include Details Of"
               onChange={handleIncludesChange}
               options={includeOptions}
               rounded="rounded-md"
-            />
+            />}
           </div>
           {/* bookings */}
           <BookingListHOC loading={state.loading}>
@@ -132,6 +137,7 @@ const Bookings = () => {
               return (
                 <BookingCard
                   key={index}
+                  view={view}
                   booking={booking}
                   updateBooking={updateBooking}
                 />
