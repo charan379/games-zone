@@ -128,4 +128,5 @@ declare type ButtonProps = {
     success?: boolean
     classsName?: string;
     title?: string
+    isLoading?: boolean;
 }

@@ -1,4 +1,4 @@
-import LinkCard from "@/ui/components/LinkCard";
+import LinkCard from "@/ui/components/common/LinkCard";
 
 export default function AdminDashboard() {
   return (

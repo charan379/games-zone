@@ -1,4 +1,5 @@
 import React from "react";
+import Spinner from "./Spinner";
 
 const Button: React.FC<ButtonProps> = (props) => {
   const {
@@ -11,6 +12,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     success,
     classsName,
     title,
+    isLoading,
   } = props;
   return (
     <button
@@ -19,9 +21,9 @@ const Button: React.FC<ButtonProps> = (props) => {
       disabled={disabled}
       title={title ?? "button"}
       // prettier-ignore
-      className={classsName ?? `mt-0 text-sm ${disabled || danger ? "bg-red-400" : success ? "bg-emerald-500" : "bg-slate-500"}  text-white py-2 px-4 hover:bg-purple-600 ${rounded}`}
+      className={classsName ?? `min-w-[120px] mt-0 text-sm ${disabled || danger ? "bg-red-400" : success ? "bg-emerald-500" : "bg-slate-500"}  text-white py-2 px-4 hover:bg-purple-600 ${rounded}`}
     >
-      {children}
+      {isLoading ? <Spinner /> : children}
     </button>
   );
 };

@@ -50,27 +50,33 @@ const BookingCard: React.FC<Props> = (props) => {
         {/* Actions */}
         {booking.bookingStatus === "REQUESTED" && (
           <div className="flex flex-col sm:flex-row px-2 py-2 gap-3 sm:gap-5 bg-gray-50 rounded-md shadow-sm">
-            {view === "ADMIN" && <Button
-              success
-              rounded={"rounded-md"}
-              onClick={() => handleUpdate("APPROVED")}
-            >
-              Approve
-            </Button>}
-            {view === 'USER' && <Button
-              danger
-              rounded={"rounded-md"}
-              onClick={() => handleUpdate("CANCELLED")}
-            >
-              Cancel
-            </Button>}
-            {view === 'ADMIN' && <Button
-              danger
-              rounded={"rounded-md"}
-              onClick={() => handleUpdate("REJECTED")}
-            >
-              Reject
-            </Button>}
+            {view === "ADMIN" && (
+              <Button
+                success
+                rounded={"rounded-md"}
+                onClick={() => handleUpdate("APPROVED")}
+              >
+                Approve
+              </Button>
+            )}
+            {view === "USER" && (
+              <Button
+                danger
+                rounded={"rounded-md"}
+                onClick={() => handleUpdate("CANCELLED")}
+              >
+                Cancel
+              </Button>
+            )}
+            {view === "ADMIN" && (
+              <Button
+                danger
+                rounded={"rounded-md"}
+                onClick={() => handleUpdate("REJECTED")}
+              >
+                Reject
+              </Button>
+            )}
           </div>
         )}
       </div>

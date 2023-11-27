@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import gzRequest from "@/lib/utils/gzRequest";
 import SelectInput from "@/ui/components/form/SelectInput";
 import BookingListHOC from "../bookings-list/BookingListHOC";
-import BookingCard from "../bookings-list/booking-card/BookingCard";
+import BookingCard from "../booking-card/BookingCard";
 import TableFooter from "@/ui/components/table/TableFooter";
 import CheckboxGroup from "@/ui/components/form/CheckboxGroup";
 import DateInput from "@/ui/components/form/DateInput";

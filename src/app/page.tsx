@@ -1,5 +1,5 @@
 import { authOptions } from "@/lib/nextauth/auth";
-import LinkCard from "@/ui/components/LinkCard";
+import LinkCard from "@/ui/components/common/LinkCard";
 import { getServerSession } from "next-auth";
 
 export default async function Home() {
