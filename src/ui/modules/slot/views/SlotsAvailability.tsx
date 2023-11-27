@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import DateInput from "@/ui/components/form/DateInput";
 import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
 import SlotLocationsHOC from "../components/SlotLocationsHOC";
-import SuccessCard from "../../../components/common/SuccessCard";
+import InfoCard from "../../../components/common/InfoCard";
 import ModalHOC from "@/ui/components/modal/ModalHOC";
 import bookSlotRequest from "../requests/bookSlot";
 
@@ -111,7 +111,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.infoCard.show}>
         {/* prettier-ignore */}
-        <SuccessCard messages={state.modals.infoCard.messages} close={() => dispatch({ type: "CLOSE_MODALS" })} />
+        <InfoCard messages={state.modals.infoCard.messages} close={() => dispatch({ type: "CLOSE_MODALS" })} />
       </ModalHOC>
     </div>
   );

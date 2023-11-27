@@ -3,13 +3,17 @@ import React from "react";
 interface SpinnerProps {
   // Add any additional props if needed
   className?: string;
+  height?: string;
+  width?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ className }) => {
+const Spinner: React.FC<SpinnerProps> = ({ className, height, width }) => {
   return (
     <svg
       role="status"
-      className={`inline h-6 w-8 animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-purple-600 ${className}`}
+      className={`inline ${height ?? " h-6 "} ${
+        width ?? " w-8 "
+      }animate-spin mr-2 text-gray-200 dark:text-gray-600 fill-purple-600 ${className}`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

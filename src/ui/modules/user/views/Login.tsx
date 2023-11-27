@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import ModalLayout from "@/ui/components/Modal/ModalLayout";
+import ModalLayout from "@/ui/components/modal/ModalLayout";
 import Button from "@/ui/components/common/Button";
 
 const Login: React.FC = () => {
