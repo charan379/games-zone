@@ -15,14 +15,14 @@ const SlotDetailsSection: React.FC<Props> = (props) => {
       {game && (
         <div
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
-          key={1}
+          key={`${slot.slotId}-div-1`}
         >
-          <KeyValuePair label="Game" value={game?.gameName} key={2} />
+          <KeyValuePair label="Game" value={game?.gameName} key={"gName"} />
           {view === "ADMIN" && (
             <KeyValuePair
               label="Game ID"
               value={game?.gameId?.toString()}
-              key={1}
+              key={"gId"}
             />
           )}
         </div>
@@ -31,33 +31,33 @@ const SlotDetailsSection: React.FC<Props> = (props) => {
         <>
           <div
             className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
-            key={2}
+            key={`${slot.slotId}-div-2`}
           >
             <KeyValuePair label="Slot" value={slot?.slotName} key={4} />
             {view === "ADMIN" && (
               <KeyValuePair
                 label="Slot ID"
                 value={slot?.slotId?.toString()}
-                key={3}
+                key={"sId"}
               />
             )}
           </div>
           <div
             className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-1 sm:gap-10"
-            key={3}
+            key={`${slot.slotId}-div-3`}
           >
             <KeyValuePair
               label="Start Time"
               value={convertTo12HourFormat(slot?.startTime)}
-              key={3}
+              key={`sSt`}
             />
             <KeyValuePair
               label="End Time"
               value={convertTo12HourFormat(slot?.endTime)}
-              key={4}
+              key={"sEt"}
             />
           </div>
-          <KeyValuePair label="Location" value={slot?.location} key={3} />
+          <KeyValuePair label="Location" value={slot?.location} key={"sLc"} />
         </>
       )}
     </>
