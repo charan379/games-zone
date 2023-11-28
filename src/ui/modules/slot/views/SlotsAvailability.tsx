@@ -5,14 +5,13 @@ import { v4 as uuidv4 } from "uuid";
 import { groupByInnerObjectField } from "@/lib/utils/groupBy";
 import SlotCard from "../components/SlotCard";
 import SlotLocation from "../components/SlotLocation";
-import gzRequest from "@/lib/utils/gzRequest";
 import { useSession } from "next-auth/react";
-import DateInput from "@/ui/components/form/DateInput";
-import convertToLocaleDate from "@/lib/utils/convertToLocaleDate";
 import SlotLocationsHOC from "../components/SlotLocationsHOC";
 import InfoCard from "../../../components/common/InfoCard";
 import ModalHOC from "@/ui/components/modal/ModalHOC";
 import bookSlotRequest from "../requests/bookSlot";
+import EnabledDates from "../features/EnabledDates";
+import fetchSlotAvailabilityRecords from "../requests/fetchSlotAvailabilityRecords";
 
 interface Props {
   gameId: number;
@@ -32,25 +31,25 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
   // prettier-ignore
   function bookSlot(slot: Slot, forDate: string): Promise<boolean> {
-    dispatch({type: "INFO_MODAL",paylod: {message: `Submitting booking request...`,isLoading: true}});
+    dispatch({ type: "INFO_MODAL", paylod: { message: `Submitting booking request...`, isLoading: true } });
     // prettier-ignore
     return bookSlotRequest({ forDate: forDate, gameId: slot.gameId, slotId: slot.slotId, userId: session?.user.userId as number }, session?.auth?.token)
       .then((res: GZResponse<Booking>) => {
         if (res.ok && res.result) {
-          dispatch({ type: "INFO_MODAL", paylod: {message: `Successfully submitted with id : ${res.result.bookingId}`, isLoading: false} })
+          dispatch({ type: "INFO_MODAL", paylod: { message: `Successfully submitted with id : ${res.result.bookingId}`, isLoading: false } })
           return true
         } else {
-          dispatch({ type: "INFO_MODAL", paylod: {message: res?.error?.errorMessage ?? "Somthing went wrong !", isLoading: false} })
+          dispatch({ type: "INFO_MODAL", paylod: { message: res?.error?.errorMessage ?? "Somthing went wrong !", isLoading: false } })
           return false
         }
       }).catch(err => {
-        dispatch({ type: "INFO_MODAL", paylod: {message: "Somthing went wrong !", isLoading: false} })
+        dispatch({ type: "INFO_MODAL", paylod: { message: "Somthing went wrong !", isLoading: false } })
         return false;
       })
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -79,7 +78,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -88,7 +87,8 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         <p className="text-base left-0 top-0 flex w-full justify-center rounded-md border border-gray-300 bg-gray-200 py-4 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Showing Slots from game : {gameId}
         </p>
-        <DateInput
+        <EnabledDates
+          authToken={session?.auth?.token}
           name="forDate"
           onChange={handleQueryChange}
           rounded="rounded-md"
@@ -125,16 +125,6 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
 export default SlotsAvailability;
 
-// prettier-ignore
-async function fetchSlotAvailabilityRecords(query: { forDate: string }, gameId: number, authToken?: string): Promise<GZResponse<SlotAvailabilityRecord[]>> {
-  return gzRequest<{ forDate: string }, null, SlotAvailabilityRecord[]>({
-    requestMethod: "GET",
-    requestQuery: { ...query, forDate: convertToLocaleDate(query.forDate) },
-    requestUrl: `http://localhost:3333/api/booking/game/${gameId}/slots/availability`,
-    authToken: authToken,
-  });
-}
-
 interface StateAction {
   type: string;
   paylod?: any;
@@ -166,7 +156,7 @@ const initialState: ComponentState = {
 function reducer(state: ComponentState, action: StateAction): ComponentState {
   switch (action.type) {
     case "INFO_MODAL":
-      return { ...state, modals: { ...state.modals, infoCard: { show: true, messages: action?.paylod?.message, isLoading:action?.paylod?.isLoading  } } };
+      return { ...state, modals: { ...state.modals, infoCard: { show: true, messages: action?.paylod?.message, isLoading: action?.paylod?.isLoading } } };
     case "CLOSE_MODALS":
       return { ...state, modals: { ...state.modals, infoCard: { show: false, messages: "", isLoading: false } } };
     case "SET_MESSAGES":

@@ -130,3 +130,6 @@ declare type ButtonProps = {
     title?: string
     isLoading?: boolean;
 }
+
+
+declare type Option = { label: string; value: any }
