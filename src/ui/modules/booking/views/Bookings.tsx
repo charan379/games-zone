@@ -194,6 +194,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
                   view={view}
                   booking={booking}
                   updateBooking={updateBooking}
+                  authToken={session?.auth?.token}
                 />
               );
             })}

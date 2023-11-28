@@ -1,22 +1,68 @@
+'use client';
+
 import Button from "@/ui/components/common/Button";
-import React from "react";
+import React, { useState } from "react";
 import BookingCardSection from "./components/BookingCardSection";
 import BookingDetailsSection from "./components/BookingDetailsSection";
 import SlotDetailsSection from "./components/SlotDetailsSection";
 import UserDetailsSection from "./components/UserDetailsSection";
+import approveBooking from "../../requests/approveBooking";
+import rejectBooking from "../../requests/rejectBooking";
+import cancelBooking from "../../requests/cancelBooking";
 
 interface Props {
   booking: Partial<Booking>;
   updateBooking: (b: Partial<Booking>) => void;
   view: "ADMIN" | "USER";
+  authToken?: string;
 }
 
 const BookingCard: React.FC<Props> = (props) => {
-  const { booking, updateBooking, view } = props;
+
+  const { booking, updateBooking, view, authToken } = props;
+
+  const [requesting, setRequesting] = useState<{ approve: boolean, reject: boolean, cancel: boolean }>({ approve: false, cancel: false, reject: false });
 
   // prettier-ignore
-  const handleUpdate = (status: "APPROVED" | "REQUESTED" | "REJECTED" | "CANCELLED") => {
-    updateBooking({ ...booking, bookingStatus: status });
+  const handleUpdate = (status: "APPROVED" | "REJECTED" | "CANCELLED") => {
+
+    if (!booking?.bookingId) {
+      alert("Somthing went wrong !");
+      return;
+    }
+
+    switch (status) {
+      case "APPROVED":
+        setRequesting({ ...requesting, approve: true });
+        approveBooking(booking.bookingId, authToken).then((res) => {
+          if (res?.ok && res?.result) {
+            updateBooking({ ...booking, bookingStatus: "APPROVED" });
+          }
+        })
+        break;
+      case "REJECTED":
+        setRequesting({ ...requesting, reject: true });
+        rejectBooking(booking.bookingId, authToken).then((res) => {
+          if (res?.ok && res?.result) {
+            updateBooking({ ...booking, bookingStatus: "REJECTED" });
+          }
+        })
+        break;
+      case "CANCELLED":
+        setRequesting({ ...requesting, cancel: true });
+        cancelBooking(booking.bookingId, authToken).then((res) => {
+          if (res?.ok && res?.result) {
+            updateBooking({ ...booking, bookingStatus: "CANCELLED" });
+          }
+        })
+        break;
+      default:
+        break;
+    }
+
+    setTimeout(() => {
+      setRequesting({ approve: false, cancel: false, reject: false });
+    }, 100);
   };
 
   return (
@@ -59,6 +105,7 @@ const BookingCard: React.FC<Props> = (props) => {
                 success
                 rounded={"rounded-md"}
                 onClick={() => handleUpdate("APPROVED")}
+                isLoading={requesting.approve}
               >
                 Approve
               </Button>
@@ -68,6 +115,7 @@ const BookingCard: React.FC<Props> = (props) => {
                 danger
                 rounded={"rounded-md"}
                 onClick={() => handleUpdate("CANCELLED")}
+                isLoading={requesting.cancel}
               >
                 Cancel
               </Button>
@@ -77,6 +125,7 @@ const BookingCard: React.FC<Props> = (props) => {
                 danger
                 rounded={"rounded-md"}
                 onClick={() => handleUpdate("REJECTED")}
+                isLoading={requesting.reject}
               >
                 Reject
               </Button>
