@@ -17,7 +17,7 @@ import EditSlot from "../features/EditSlot";
 import DeleteSlot from "../features/DeleteSlot";
 import convertTo12HourFormat from "@/lib/utils/convertTo12HrFormat";
 import fetchSlots from "../requests/fetchSlots";
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuid4 } from "uuid";
 
 interface Props {
   gameId: number;
@@ -40,7 +40,7 @@ const AdminSlots: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => { };
+    if (authStatus === "loading") return () => {};
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -66,7 +66,7 @@ const AdminSlots: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => { };
+    return () => {};
   }, [state.query, authStatus]);
 
   return (
@@ -89,7 +89,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                   options={limitOptions}
                   onChange={handleQueryChange}
                   rounded="rounded-l"
-                  key={uuid4()}
+                  key={"limit"}
                 />
                 {/*  */}
                 <SelectInput
@@ -99,7 +99,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                   options={sortOptions}
                   onChange={(e) => handleQueryChange(e)}
                   rounded=""
-                  key={uuid4()}
+                  key={"sort"}
                 />
               </div>
               {/*  */}
@@ -111,7 +111,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                 type="Search"
                 placeholder="Slot Name"
                 rounded=""
-                key={uuid4()}
+                key={"name"}
               />
               <TextInput
                 label="Location"
@@ -121,7 +121,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                 type="Search"
                 placeholder="Slot Location"
                 rounded="rounded-r"
-                key={uuid4()}
+                key={"location"}
               />
             </div>
             {/* prettier-ignore  */}

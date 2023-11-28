@@ -57,6 +57,7 @@ declare type GameQuery = {
 }
 
 declare type BookingQuery = {
+    bookingId: string,
     gameId: string,
     userId: string,
     status: string,

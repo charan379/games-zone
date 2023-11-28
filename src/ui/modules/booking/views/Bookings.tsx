@@ -10,7 +10,7 @@ import CheckboxGroup from "@/ui/components/form/CheckboxGroup";
 import DateInput from "@/ui/components/form/DateInput";
 import TextInput from "@/ui/components/form/TextInput";
 import fetchBookings from "../requests/fetchBookings";
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuid4 } from "uuid";
 
 interface Props {
   view: "ADMIN" | "USER";
@@ -38,6 +38,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
       empty: true,
     },
     query: {
+      bookingId: "",
       userId:
         view === "USER" && session?.user?.userId?.toString()
           ? session?.user?.userId?.toString()
@@ -78,7 +79,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
   };
 
   useEffect(() => {
-    if (authStatus === "loading") return () => { };
+    if (authStatus === "loading") return () => {};
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -105,7 +106,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
         }, 150);
       });
 
-    return () => { };
+    return () => {};
   }, [state.query, authStatus]);
 
   return (
@@ -152,26 +153,38 @@ const Bookings: React.FC<Props> = ({ view }) => {
                   onChange={handleQueryChange}
                   rounded={"rounded-none"}
                 />
-                {view === "ADMIN" && (
-                  <TextInput
-                    name="userId"
-                    onChange={handleQueryChange}
-                    rounded="rounded-none"
-                    type="Search"
-                    placeholder="User ID"
-                    value={state.query.userId}
-                    key={uuid4()}
-                  />
-                )}
                 <TextInput
-                  name="gameId"
+                  name="bookingId"
                   onChange={handleQueryChange}
-                  rounded="rounded-r"
+                  rounded="rounded-none"
                   type="Search"
-                  placeholder="Game ID"
-                  value={state.query.gameId}
-                  key={uuid4()}
+                  placeholder="Booking ID"
+                  value={state.query.bookingId}
+                  key={"bookingId"}
                 />
+                {view === "ADMIN" && (
+                  <>
+                    <TextInput
+                      name="userId"
+                      onChange={handleQueryChange}
+                      rounded="rounded-none"
+                      type="Search"
+                      placeholder="User ID"
+                      value={state.query.userId}
+                      key={"userId"}
+                    />
+
+                    <TextInput
+                      name="gameId"
+                      onChange={handleQueryChange}
+                      rounded="rounded-r"
+                      type="Search"
+                      placeholder="Game ID"
+                      value={state.query.gameId}
+                      key={"gameId"}
+                    />
+                  </>
+                )}
               </div>
               {/*  */}
             </div>

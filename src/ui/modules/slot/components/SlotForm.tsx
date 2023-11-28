@@ -1,7 +1,6 @@
 import TextInput from "@/ui/components/form/TextInput";
 import TimeInput from "@/ui/components/form/TimeInput";
 import React from "react";
-import { v4 as uuid4 } from 'uuid';
 
 interface Props {
   children: React.ReactNode;
@@ -18,13 +17,13 @@ const SlotForm: React.FC<Props> = (props) => {
       <TextInput
         label="Name"
         name="slotName"
+        key={"slotName"}
         onChange={handleChange}
         rounded="rounded-md"
         required={true}
         type="Normal"
         placeholder="Slot Name"
         value={slot?.slotName}
-        key={uuid4()}
       />
       <TimeInput
         label="Start Time"
@@ -32,7 +31,7 @@ const SlotForm: React.FC<Props> = (props) => {
         onChange={handleChange}
         rounded="rounded-md"
         required={true}
-        key={uuid4()}
+        key={"startTime"}
         value={slot?.startTime ?? ""}
       />
       <TimeInput
@@ -41,7 +40,7 @@ const SlotForm: React.FC<Props> = (props) => {
         onChange={handleChange}
         rounded="rounded-md"
         required={true}
-        key={uuid4()}
+        key={"endTime"}
         value={slot?.endTime ?? ""}
       />
       <TextInput
@@ -53,7 +52,7 @@ const SlotForm: React.FC<Props> = (props) => {
         type="Normal"
         placeholder="Slot Location"
         value={slot?.location}
-        key={uuid4()}
+        key={"location"}
       />
       {children}
     </form>

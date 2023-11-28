@@ -17,7 +17,7 @@ import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditGame from "../features/EditGame";
 import DeleteGame from "../features/DeleteGame";
 import Link from "next/link";
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuid4 } from "uuid";
 
 const AdminGames = () => {
   const { data: session, status: authStatus } = useSession();
@@ -36,7 +36,7 @@ const AdminGames = () => {
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => { };
+    if (authStatus === "loading") return () => {};
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -62,7 +62,7 @@ const AdminGames = () => {
         }, 150);
       });
 
-    return () => { };
+    return () => {};
   }, [state.query, authStatus]);
 
   return (
@@ -83,6 +83,7 @@ const AdminGames = () => {
                   options={limitOptions}
                   onChange={handleQueryChange}
                   rounded="rounded-l"
+                  key={"limit"}
                 />
                 {/*  */}
                 <SelectInput
@@ -92,6 +93,7 @@ const AdminGames = () => {
                   options={sortOptions}
                   onChange={(e) => handleQueryChange(e)}
                   rounded=""
+                  key={"sort"}
                 />
               </div>
               {/*  */}
@@ -102,6 +104,7 @@ const AdminGames = () => {
                 onChange={handleQueryChange}
                 type="Search"
                 rounded="rounded-r"
+                key={"query"}
               />
             </div>
             {/* prettier-ignore  */}
