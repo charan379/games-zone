@@ -26,7 +26,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
   }
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative">
       {label ? (
         <label className="block font-semibold mb-1" htmlFor={name}>
           {label}
@@ -42,7 +42,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
         step={1}
         onChange={onChange}
         placeholder={placeholder ?? label}
-        className={`cursor-pointer appearance-none h-full ${rounded} border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:bg-white focus:border-gray-500`}
+        className={`cursor-pointer appearance-none max-h-[38px] ${rounded} border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:bg-white focus:border-gray-500`}
       />
     </div>
   );

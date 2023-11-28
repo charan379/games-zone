@@ -118,7 +118,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
             </h2>
           </div>
           <div className="flex  flex-col md:flex-row justify-between items-center gap-4">
-            <div className="my-2 flex-col md:flex-row">
+            <div className="my-2 flex sm:flex-row flex-col items-center">
               <div className="flex flex-col md:flex-row mb-1 sm:mb-0">
                 {/*  */}
                 <SelectInput
