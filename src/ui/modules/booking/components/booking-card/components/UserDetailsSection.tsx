@@ -1,5 +1,6 @@
 import React from "react";
 import KeyValuePair from "./KeyValuePair";
+import { v4 as uuid4 } from 'uuid';
 
 interface Props {
   user: Partial<User>;
@@ -13,18 +14,18 @@ const UserDetailsSection: React.FC<Props> = (props) => {
     <>
       <div
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-10"
-        key={1}
+        key={uuid4()}
       >
-        <KeyValuePair label="User" value={user.userName} key={2} />
+        <KeyValuePair label="User" value={user.userName} key={uuid4()} />
         {view === "ADMIN" && (
           <KeyValuePair
             label="User ID"
             value={user?.userId?.toString()}
-            key={1}
+            key={uuid4()}
           />
         )}
       </div>
-      <KeyValuePair label="Email ID" value={user.email} key={2} />
+      <KeyValuePair label="Email ID" value={user.email} key={uuid4()} />
     </>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuid4 } from 'uuid';
 import BookingCardLoadingSkeleton from "./booking-card/components/BookingCardLoadingSkeleton";
 
 interface Props {
@@ -12,8 +13,8 @@ const BookingListHOC: React.FC<Props> = (props) => {
   if (loading) {
     return (
       <>
-        <BookingCardLoadingSkeleton key={1} />
-        <BookingCardLoadingSkeleton key={2} />
+        <BookingCardLoadingSkeleton key={uuid4()} />
+        <BookingCardLoadingSkeleton key={uuid4()} />
       </>
     );
   }

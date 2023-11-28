@@ -13,12 +13,12 @@ const UserGames = () => {
 
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        event.preventDefault();
-        dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
-      };
+    event.preventDefault();
+    dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
+  };
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -49,7 +49,7 @@ const UserGames = () => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -61,8 +61,8 @@ const UserGames = () => {
         <SearchForm changeHandler={handleQueryChange} gameQuery={state.query} />
       </div>
       <div className="w-full mt-5 flex flex-row flex-wrap gap-7 items-center justify-center md:justify-start py-5 overflow-hidden">
-        {state.games.map((game, index) => {
-          return <GameCard key={index} game={game} id={game.gameId} />;
+        {state.games.map((game) => {
+          return <GameCard key={game.gameId} game={game} id={game.gameId} />;
         })}
       </div>
       <span className="text-lg xs:text-base text-gray-900">
@@ -103,20 +103,20 @@ const initialState: ComponentState = {
 
 // prettier-ignore
 function reducer(state: ComponentState, action: StateAction): ComponentState {
-    switch (action.type) {
-      case "SET_MESSAGES": 
-        return {...state, messages: action?.paylod ?? ""};
-      case "SET_GAMES": 
-        if(action?.gamesPayload)
-          return {...state, games: action?.gamesPayload};
-        return state;
-      case "SET_QUERY": 
-        if(action?.queryPaylod)
-          return {...state,query: {...state.query, ...action.queryPaylod}}
-        return state;
-      case "LOADING":
-        return {...state, loading: action.paylod ?? false};
-      default:
-        return state;
-    }
+  switch (action.type) {
+    case "SET_MESSAGES":
+      return { ...state, messages: action?.paylod ?? "" };
+    case "SET_GAMES":
+      if (action?.gamesPayload)
+        return { ...state, games: action?.gamesPayload };
+      return state;
+    case "SET_QUERY":
+      if (action?.queryPaylod)
+        return { ...state, query: { ...state.query, ...action.queryPaylod } }
+      return state;
+    case "LOADING":
+      return { ...state, loading: action.paylod ?? false };
+    default:
+      return state;
   }
+}

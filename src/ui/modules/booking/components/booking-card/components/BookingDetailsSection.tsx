@@ -1,5 +1,6 @@
 import React from "react";
 import KeyValuePair from "./KeyValuePair";
+import { v4 as uuid4 } from 'uuid';
 
 const BookingDetailsSection: React.FC<Partial<Booking>> = (props) => {
   const { bookingId, forDate, transactionDate, bookingStatus } = props;
@@ -37,16 +38,16 @@ const BookingDetailsSection: React.FC<Partial<Booking>> = (props) => {
         <KeyValuePair
           label="Booking ID"
           value={bookingId?.toString()}
-          key={1}
+          key={uuid4()}
         />
         <KeyValuePair label="For Date" value={forDate} key={2} />
         <KeyValuePair
           label="Transaction Date"
           value={formattedTransactionDate}
-          key={3}
+          key={uuid4()}
         />
       </div>
-      <KeyValuePair label="Booking Status">
+      <KeyValuePair label="Booking Status" key={uuid4()}>
         <div
           className={`px-4 py-1 rounded-full font-semibold ${color} text-white text-xs`}
         >

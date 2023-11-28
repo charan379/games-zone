@@ -3,6 +3,7 @@
 import React from "react";
 import MenuItem from "./components/MenuItem";
 import { signOut, useSession } from "next-auth/react";
+import { v4 as uuid4 } from 'uuid';
 
 const Menu = () => {
   const links = [
@@ -15,9 +16,9 @@ const Menu = () => {
 
   return (
     <ul className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
-      {links.map((link, index) => {
+      {links.map((link) => {
         return (
-          <li key={index}>
+          <li key={uuid4()}>
             <MenuItem {...link} />
           </li>
         );
@@ -25,9 +26,9 @@ const Menu = () => {
 
       {/* admin */}
       {authStatus === "authenticated" &&
-      session.user.roles.includes("ROLE_ADMIN") ? (
+        session.user.roles.includes("ROLE_ADMIN") ? (
         <>
-          <li key={links.length + 3}>
+          <li key={uuid4()}>
             <MenuItem href="/admin" label="Admin Dashboard" />
           </li>
         </>
@@ -36,13 +37,13 @@ const Menu = () => {
       )}
       {/* auth options */}
       {authStatus === "authenticated" ? (
-        <li key={links.length + 2}>
+        <li key={uuid4()}>
           <MenuItem>
             <button onClick={() => signOut()}>Sign Out</button>
           </MenuItem>
         </li>
       ) : (
-        <li key={links.length + 1}>
+        <li key={uuid4()}>
           <MenuItem href="/login" label="Sign In" />
         </li>
       )}

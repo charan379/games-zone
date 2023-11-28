@@ -10,6 +10,7 @@ import CheckboxGroup from "@/ui/components/form/CheckboxGroup";
 import DateInput from "@/ui/components/form/DateInput";
 import TextInput from "@/ui/components/form/TextInput";
 import fetchBookings from "../requests/fetchBookings";
+import { v4 as uuid4 } from 'uuid';
 
 interface Props {
   view: "ADMIN" | "USER";
@@ -77,7 +78,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
   };
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -104,7 +105,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -159,7 +160,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
                     type="Search"
                     placeholder="User ID"
                     value={state.query.userId}
-                    key={1}
+                    key={uuid4()}
                   />
                 )}
                 <TextInput
@@ -169,7 +170,7 @@ const Bookings: React.FC<Props> = ({ view }) => {
                   type="Search"
                   placeholder="Game ID"
                   value={state.query.gameId}
-                  key={2}
+                  key={uuid4()}
                 />
               </div>
               {/*  */}
@@ -186,10 +187,10 @@ const Bookings: React.FC<Props> = ({ view }) => {
           </div>
           {/* bookings */}
           <BookingListHOC loading={state.loading}>
-            {state.page.content.map((booking, index) => {
+            {state.page.content.map((booking) => {
               return (
                 <BookingCard
-                  key={index}
+                  key={uuid4()}
                   view={view}
                   booking={booking}
                   updateBooking={updateBooking}

@@ -17,6 +17,7 @@ import DeleteIcon from "@/ui/components/common/icons/DeleteIcon";
 import EditGame from "../features/EditGame";
 import DeleteGame from "../features/DeleteGame";
 import Link from "next/link";
+import { v4 as uuid4 } from 'uuid';
 
 const AdminGames = () => {
   const { data: session, status: authStatus } = useSession();
@@ -26,16 +27,16 @@ const AdminGames = () => {
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     event.preventDefault();
-    dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
+    dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
   };
 
   // prettier-ignore
   const updateGame = (game: Game, actionType: "UPDATE_GAME" | "APPEND_GAME") => {
-    dispatch({type: actionType, gamePaylod: game});
+    dispatch({ type: actionType, gamePaylod: game });
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -61,7 +62,7 @@ const AdminGames = () => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -113,20 +114,20 @@ const AdminGames = () => {
             <Table
               render={state.messages ? false : true}
               headerRows={["ID", "Game Name", "Slots", "Actions"]}
-              bodyRows={state.page?.content?.map((game, index) => {
+              bodyRows={state.page?.content?.map((game) => {
                 return [
                   // prettier-ignore
-                  <TableBodyCell key={`row-${index}-col-1`} renderStatus={game?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={game?.renderStatus}>
                     <NormalText text={game?.gameId} />
                   </TableBodyCell>,
                   // prettier-ignore
-                  <TableBodyCell key={`row-${index}-col-2`} renderStatus={game?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={game?.renderStatus}>
                     <NormalText text={game.gameName} />
                   </TableBodyCell>,
                   // prettier-ignore
-                  <TableBodyCell key={`row-${index}-col-3`} renderStatus={game?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={game?.renderStatus}>
                     <Link
-                      href={`${game?.renderStatus === "deleted" ? '#': `games/${game.gameId}/slots`}`}
+                      href={`${game?.renderStatus === "deleted" ? '#' : `games/${game.gameId}/slots`}`}
                       className="px-3 py-1 rounded-md bg-sky-600 text-white hover:bg-sky-800"
                       title="Open Slots"
                     >
@@ -134,7 +135,7 @@ const AdminGames = () => {
                     </Link>
                   </TableBodyCell>,
                   // prettier-ignore
-                  <TableBodyCell key={`row-${index}-col-4`} renderStatus={game?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={game?.renderStatus}>
                     <div className="inline-flex gap-4 w-full items-center justify-start">
                       {/* prettier-ignore */}
                       <Button classsName="w-7" title="Edit" disabled={game?.renderStatus === "deleted"}
@@ -143,7 +144,7 @@ const AdminGames = () => {
                       </Button>
                       {/* prettier-ignore */}
                       <Button classsName="w-7" title="Delete" disabled={game?.renderStatus === "deleted"}
-                        onClick={() =>dispatch({type: "DELETE_GAME_MODAL",gamePaylod: game,})}>
+                        onClick={() => dispatch({ type: "DELETE_GAME_MODAL", gamePaylod: game, })}>
                         <DeleteIcon />
                       </Button>
                     </div>
@@ -171,7 +172,7 @@ const AdminGames = () => {
       {/* modal */}
       {/* prettier-ignore */}
       <ModalHOC key={"addGameModal"} show={state.modals.addGame.show}>
-        <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame}/>
+        <AddGame close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame} />
       </ModalHOC>
       <ModalHOC key={"editGameModal"} show={state.modals.editGame.show}>
         {/* prettier-ignore */}
@@ -180,7 +181,7 @@ const AdminGames = () => {
 
       <ModalHOC key={"deleteGameModal"} show={state.modals.deleteGame.show}>
         {/* prettier-ignore */}
-        <DeleteGame game={state.modals.deleteGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame}/>
+        <DeleteGame game={state.modals.deleteGame.game} close={() => dispatch({ type: "CLOSE_MODALS" })} onSuccess={updateGame} />
       </ModalHOC>
     </>
   );
@@ -301,40 +302,40 @@ function reducer(state: ComponentState, action: StateAction): ComponentState {
     case "ADD_GAME_MODAL":
       return { ...state, modals: { ...state.modals, addGame: { show: true } } };
     case "EDIT_GAME_MODAL":
-      if(action?.gamePaylod)
+      if (action?.gamePaylod)
         return { ...state, modals: { ...state.modals, editGame: { show: true, game: action.gamePaylod } } };
       return state;
     case "DELETE_GAME_MODAL":
-      if(action?.gamePaylod)
+      if (action?.gamePaylod)
         return { ...state, modals: { ...state.modals, deleteGame: { show: true, game: action.gamePaylod } } };
       return state;
     case "CLOSE_MODALS":
-      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: {show: false}, deleteGame: {show: false}} };
-    case "SET_MESSAGES": 
-      return {...state, messages: action?.paylod ?? ""};
+      return { ...state, modals: { ...state.modals, addGame: { show: false }, editGame: { show: false }, deleteGame: { show: false } } };
+    case "SET_MESSAGES":
+      return { ...state, messages: action?.paylod ?? "" };
     case "UPDATE_GAME":
-      return {...state, page: {...state.page, content:state.page.content.map((g) => (g.gameId === action?.gamePaylod?.gameId)&&action?.gamePaylod ? {...g, ...action.gamePaylod} : g)}}
+      return { ...state, page: { ...state.page, content: state.page.content.map((g) => (g.gameId === action?.gamePaylod?.gameId) && action?.gamePaylod ? { ...g, ...action.gamePaylod } : g) } }
     case "APPEND_GAME":
-      if(action?.gamePaylod)
-        return {...state, page: {...state.page, content:[...state.page.content, action?.gamePaylod]}};
+      if (action?.gamePaylod)
+        return { ...state, page: { ...state.page, content: [...state.page.content, action?.gamePaylod] } };
       return state;
-    case "SET_PAGE": 
-      if(action?.pagePaylod)
-        return {...state, page: action?.pagePaylod};
+    case "SET_PAGE":
+      if (action?.pagePaylod)
+        return { ...state, page: action?.pagePaylod };
       return state;
-    case "SET_QUERY": 
-      if(action?.queryPaylod) {
+    case "SET_QUERY":
+      if (action?.queryPaylod) {
         const prevPage = state.query.pageNo;
         const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
-        return {...state,query: {...state.query, ...action.queryPaylod, pageNo}}
+        return { ...state, query: { ...state.query, ...action.queryPaylod, pageNo } }
       }
       return state;
-    case "NEXT_PAGE": 
-      return {...state, query: {...state.query, pageNo: state.query.pageNo + 1}};
-    case "PREV_PAGE": 
-      return {...state, query: {...state.query, pageNo: state.query.pageNo - 1}};
+    case "NEXT_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo + 1 } };
+    case "PREV_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo - 1 } };
     case "LOADING":
-      return {...state, loading: action.paylod ?? false};
+      return { ...state, loading: action.paylod ?? false };
     default:
       return state;
   }

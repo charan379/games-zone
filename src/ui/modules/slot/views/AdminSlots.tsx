@@ -17,6 +17,7 @@ import EditSlot from "../features/EditSlot";
 import DeleteSlot from "../features/DeleteSlot";
 import convertTo12HourFormat from "@/lib/utils/convertTo12HrFormat";
 import fetchSlots from "../requests/fetchSlots";
+import { v4 as uuid4 } from 'uuid';
 
 interface Props {
   gameId: number;
@@ -29,18 +30,18 @@ const AdminSlots: React.FC<Props> = (props) => {
 
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        event.preventDefault();
-        console.log(event.target.name)
-        dispatch({type: "SET_QUERY", queryPaylod: {...state.query, [event.target.name]: event.target.value }})
-      };
+    event.preventDefault();
+    console.log(event.target.name)
+    dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
+  };
 
   // prettier-ignore
   const updateSlot = (slot: Slot, actionType: "UPDATE_SLOT" | "APPEND_SLOT") => {
-    dispatch({type: actionType, slotPaylod: slot });
+    dispatch({ type: actionType, slotPaylod: slot });
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => {};
+    if (authStatus === "loading") return () => { };
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -66,7 +67,7 @@ const AdminSlots: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => {};
+    return () => { };
   }, [state.query, authStatus]);
 
   return (
@@ -89,7 +90,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                   options={limitOptions}
                   onChange={handleQueryChange}
                   rounded="rounded-l"
-                  key={"ser2323"}
+                  key={uuid4()}
                 />
                 {/*  */}
                 <SelectInput
@@ -99,7 +100,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                   options={sortOptions}
                   onChange={(e) => handleQueryChange(e)}
                   rounded=""
-                  key={"ser1234"}
+                  key={uuid4()}
                 />
               </div>
               {/*  */}
@@ -111,7 +112,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                 type="Search"
                 placeholder="Slot Name"
                 rounded=""
-                key={"text3243"}
+                key={uuid4()}
               />
               <TextInput
                 label="Location"
@@ -121,7 +122,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                 type="Search"
                 placeholder="Slot Location"
                 rounded="rounded-r"
-                key={"text33"}
+                key={uuid4()}
               />
             </div>
             {/* prettier-ignore  */}
@@ -134,32 +135,32 @@ const AdminSlots: React.FC<Props> = (props) => {
             <Table
               render={state.messages ? false : true}
               // prettier-ignore
-              headerRows={["ID", "Slot Name", "Start Time", "End Time","Location", "Actions"]}
+              headerRows={["ID", "Slot Name", "Start Time", "End Time", "Location", "Actions"]}
               // prettier-ignore
               bodyRows={state.page?.content?.map((slot, index) => {
                 return [
                   //
-                  <TableBodyCell key={`row-${index}-col-1`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.slotId} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-2`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.slotName} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-3`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <NormalText text={convertTo12HourFormat(slot?.startTime)} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-4`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <NormalText text={convertTo12HourFormat(slot?.endTime)} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-5`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <NormalText text={slot?.location} />
                   </TableBodyCell>,
                   //
-                  <TableBodyCell key={`row-${index}-col-6`} renderStatus={slot?.renderStatus}>
+                  <TableBodyCell key={uuid4()} renderStatus={slot?.renderStatus}>
                     <div className="inline-flex gap-4 w-full items-center justify-start">
                       {/* prettier-ignore */}
                       <Button classsName="w-7" title="Edit" disabled={slot?.renderStatus === "deleted"}
@@ -168,7 +169,7 @@ const AdminSlots: React.FC<Props> = (props) => {
                       </Button>
                       {/* prettier-ignore */}
                       <Button classsName="w-7" title="Delete" disabled={slot?.renderStatus === "deleted"}
-                        onClick={() =>dispatch({type: "DELETE_SLOT_MODAL",slotPaylod: slot,})}>
+                        onClick={() => dispatch({ type: "DELETE_SLOT_MODAL", slotPaylod: slot, })}>
                         <DeleteIcon />
                       </Button>
                     </div>
@@ -334,45 +335,45 @@ interface StateAction {
 
 // prettier-ignore
 function reducer(state: ComponentState, action: StateAction): ComponentState {
-    switch (action.type) {
-      case "ADD_SLOT_MODAL":
-        return { ...state, modals: { ...state.modals, addSlot: { show: true } } };
-      case "EDIT_SLOT_MODAL":
-        if(action?.slotPaylod)
-          return { ...state, modals: { ...state.modals, editSlot: { show: true, slot: action.slotPaylod } } };
-        return state;
-      case "DELETE_SLOT_MODAL":
-        if(action?.slotPaylod)
-          return { ...state, modals: { ...state.modals, deleteSlot: { show: true, slot: action.slotPaylod } } };
-        return state;
-      case "CLOSE_MODALS":
-        return { ...state, modals: { ...state.modals, addSlot: { show: false }, editSlot: {show: false}, deleteSlot: {show: false}} };
-      case "SET_MESSAGES": 
-        return {...state, messages: action?.paylod ?? ""};
-      case "UPDATE_SLOT":
-        return {...state, page: {...state.page, content:state.page.content.map((s) => (s.slotId === action?.slotPaylod?.slotId)&&action?.slotPaylod ? {...s, ...action.slotPaylod} : s)}}
-      case "APPEND_SLOT":
-        if(action?.slotPaylod)
-          return {...state, page: {...state.page, content:[...state.page.content, action?.slotPaylod]}};
-        return state;
-      case "SET_PAGE": 
-        if(action?.pagePaylod)
-          return {...state, page: action?.pagePaylod};
-        return state;
-      case "SET_QUERY": 
-        if(action?.queryPaylod) {
-          const prevPage = state.query.pageNo;
-          const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
-          return {...state,query: {...state.query, ...action.queryPaylod, pageNo}}
-        }
-        return state;
-      case "NEXT_PAGE": 
-        return {...state, query: {...state.query, pageNo: state.query.pageNo + 1}};
-      case "PREV_PAGE": 
-        return {...state, query: {...state.query, pageNo: state.query.pageNo - 1}};
-      case "LOADING":
-        return {...state, loading: action.paylod ?? false};
-      default:
-        return state;
-    }
+  switch (action.type) {
+    case "ADD_SLOT_MODAL":
+      return { ...state, modals: { ...state.modals, addSlot: { show: true } } };
+    case "EDIT_SLOT_MODAL":
+      if (action?.slotPaylod)
+        return { ...state, modals: { ...state.modals, editSlot: { show: true, slot: action.slotPaylod } } };
+      return state;
+    case "DELETE_SLOT_MODAL":
+      if (action?.slotPaylod)
+        return { ...state, modals: { ...state.modals, deleteSlot: { show: true, slot: action.slotPaylod } } };
+      return state;
+    case "CLOSE_MODALS":
+      return { ...state, modals: { ...state.modals, addSlot: { show: false }, editSlot: { show: false }, deleteSlot: { show: false } } };
+    case "SET_MESSAGES":
+      return { ...state, messages: action?.paylod ?? "" };
+    case "UPDATE_SLOT":
+      return { ...state, page: { ...state.page, content: state.page.content.map((s) => (s.slotId === action?.slotPaylod?.slotId) && action?.slotPaylod ? { ...s, ...action.slotPaylod } : s) } }
+    case "APPEND_SLOT":
+      if (action?.slotPaylod)
+        return { ...state, page: { ...state.page, content: [...state.page.content, action?.slotPaylod] } };
+      return state;
+    case "SET_PAGE":
+      if (action?.pagePaylod)
+        return { ...state, page: action?.pagePaylod };
+      return state;
+    case "SET_QUERY":
+      if (action?.queryPaylod) {
+        const prevPage = state.query.pageNo;
+        const pageNo = prevPage === action.queryPaylod.pageNo ? 0 : action.queryPaylod.pageNo
+        return { ...state, query: { ...state.query, ...action.queryPaylod, pageNo } }
+      }
+      return state;
+    case "NEXT_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo + 1 } };
+    case "PREV_PAGE":
+      return { ...state, query: { ...state.query, pageNo: state.query.pageNo - 1 } };
+    case "LOADING":
+      return { ...state, loading: action.paylod ?? false };
+    default:
+      return state;
   }
+}

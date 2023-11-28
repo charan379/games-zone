@@ -53,7 +53,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
-    }, 10);
+    }, 100);
 
     dispatch({ type: "SET_MESSAGES", paylod: "" });
 
