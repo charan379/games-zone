@@ -45,7 +45,6 @@ const Login: React.FC = () => {
         if (searchParams.has("callbackUrl")) {
           router.push(searchParams.get("callbackUrl") as string);
         }
-        return;
       }
 
       if (response?.error) {
@@ -54,14 +53,11 @@ const Login: React.FC = () => {
         } catch (error) {
           setErrors("Somthing went wrong !");
         }
-        return;
       }
     } catch (error) {
       setErrors("Somthing went wrong !");
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 50);
+
     }
   };
 
