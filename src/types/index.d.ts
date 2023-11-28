@@ -113,7 +113,7 @@ declare type GenericResponse = {
 declare type GZRequestArgs<Q, B> = {
     requestQuery?: Q,
     requestBoby?: B,
-    requestUrl: string,
+    requestPath: string,
     authToken?: string,
     requestMethod: "GET" | "POST" | "PUT" | "DELETE",
 }

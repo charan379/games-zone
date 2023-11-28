@@ -5,7 +5,7 @@ export default async function fetchSlotAvailabilityRecords(query: { forDate: str
     return gzRequest<{ forDate: string }, null, SlotAvailabilityRecord[]>({
         requestMethod: "GET",
         requestQuery: { ...query, forDate: query.forDate },
-        requestUrl: `http://localhost:3333/api/booking/game/${gameId}/slots/availability`,
+        requestPath: `/api/booking/game/${gameId}/slots/availability`,
         authToken: authToken,
     });
 }

@@ -8,7 +8,7 @@ export default async function fetchSlots(
     return gzRequest<SlotQuery, null, GZPage<Slot>>({
         requestMethod: "GET",
         requestQuery: query,
-        requestUrl: `http://localhost:3333/api/game/${gameId}/slots/search`,
+        requestPath: `/api/game/${gameId}/slots/search`,
         authToken: authToken,
     });
 }

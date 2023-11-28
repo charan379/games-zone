@@ -1,6 +1,10 @@
-export default async function gzRequest<Q, B, R>({ requestQuery, requestBoby, requestUrl, requestMethod, authToken }: GZRequestArgs<Q, B>): Promise<GZResponse<R>> {
+export default async function gzRequest<Q, B, R>({ requestQuery, requestBoby, requestPath, requestMethod, authToken }: GZRequestArgs<Q, B>): Promise<GZResponse<R>> {
+
+    if (!process.env.NEXT_PUBLIC_BACKEND_HOST) {
+        throw Error("BACKEND_HOST is undefined !")
+    }
     // 
-    let url = requestUrl;
+    let url = `${process.env.NEXT_PUBLIC_BACKEND_HOST}${requestPath}`;
     // 
     let requestProperties: RequestInit = { method: requestMethod };
     //
@@ -9,7 +13,7 @@ export default async function gzRequest<Q, B, R>({ requestQuery, requestBoby, re
     // if there is any query then append it
     if (requestQuery) {
         const queryString = new URLSearchParams(requestQuery).toString();
-        url = `${requestUrl}?${queryString}`
+        url = `${process.env.NEXT_PUBLIC_BACKEND_HOST}${requestPath}?${queryString}`
     }
 
     if (requestMethod !== "GET" && requestBoby) {

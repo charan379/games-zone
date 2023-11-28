@@ -4,7 +4,7 @@ import gzRequest from "@/lib/utils/gzRequest";
 export default async function deleteSlot(gameId: number, slotId: number, authToken?: string): Promise<GZResponse<GenericResponse>> {
     return gzRequest<null, null, GenericResponse>({
         requestMethod: "DELETE",
-        requestUrl: `http://localhost:3333/api/game/slot/${slotId}`,
+        requestPath: `/api/game/slot/${slotId}`,
         authToken: authToken,
     });
 }

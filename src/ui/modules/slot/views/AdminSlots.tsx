@@ -31,7 +31,6 @@ const AdminSlots: React.FC<Props> = (props) => {
   // prettier-ignore
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     event.preventDefault();
-    console.log(event.target.name)
     dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
   };
 

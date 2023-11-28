@@ -20,8 +20,7 @@ export const authOptions: AuthOptions = {
 
             async authorize(credentials, req) {
                 // Add logic here to look up the user from the credentials supplied
-
-                const res = await fetch("http://localhost:3333/api/auth/generate-token", {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/auth/generate-token`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -61,7 +60,7 @@ export const authOptions: AuthOptions = {
             session.auth = {
                 token: token.accessToken
             };
-            
+
             session.user = {
                 userId: token?.userId,
                 userName: token?.userName,

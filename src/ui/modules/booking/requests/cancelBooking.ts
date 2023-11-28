@@ -6,7 +6,7 @@ export default async function cancelBooking(
 ): Promise<GZResponse<GenericResponse>> {
     return gzRequest<null, null, GenericResponse>({
         requestMethod: "PUT",
-        requestUrl: `http://localhost:3333/api/booking/${bookingId}/cancel`,
+        requestPath: `/api/booking/${bookingId}/cancel`,
         authToken: authToken,
     });
 }
