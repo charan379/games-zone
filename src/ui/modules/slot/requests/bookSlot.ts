@@ -9,7 +9,7 @@ interface BookingReqBoby {
 
 export default async function bookSlotRequest(body: BookingReqBoby, authToken?: string) {
     return gzRequest<null, BookingReqBoby, Booking>({
-        requestPath: "/api/booking",
+        requestPath: "/booking",
         requestMethod: "POST",
         requestBoby: body,
         authToken: authToken,

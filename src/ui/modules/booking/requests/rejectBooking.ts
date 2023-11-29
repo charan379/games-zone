@@ -6,7 +6,7 @@ export default async function rejectBooking(
 ): Promise<GZResponse<GenericResponse>> {
     return gzRequest<null, null, GenericResponse>({
         requestMethod: "PUT",
-        requestPath: `/api/booking/${bookingId}/reject`,
+        requestPath: `/booking/${bookingId}/reject`,
         authToken: authToken,
     });
 }

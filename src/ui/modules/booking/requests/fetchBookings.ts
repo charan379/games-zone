@@ -8,7 +8,7 @@ export default async function fetchBookings(
     return gzRequest<BookingQuery, null, GZPage<Partial<Booking>>>({
         requestMethod: "GET",
         requestQuery: { ...query, forDate: convertToLocaleDate(query.forDate) },
-        requestPath: "/api/booking/search",
+        requestPath: "/booking/search",
         authToken: authToken,
     });
 }

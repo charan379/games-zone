@@ -4,7 +4,7 @@ import gzRequest from "@/lib/utils/gzRequest";
 export default async function editSlot(gameId: number, slotId: number,update: Partial<Slot> , authToken?: string): Promise<GZResponse<Slot>> {
     return gzRequest<null, Partial<Slot>, Slot>({
       requestMethod: "PUT",
-      requestPath: `/api/game/${gameId}/update/slot/${slotId}`,
+      requestPath: `/game/${gameId}/update/slot/${slotId}`,
       requestBoby: update,
       authToken: authToken,
     });

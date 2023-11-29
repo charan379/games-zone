@@ -6,7 +6,7 @@ export default async function addGame(
 ): Promise<GZResponse<Game>> {
     return gzRequest<null, Game, Game>({
         requestMethod: "POST",
-        requestPath: "/api/game/add",
+        requestPath: "/game/add",
         requestBoby: newGame,
         authToken: authToken,
     });

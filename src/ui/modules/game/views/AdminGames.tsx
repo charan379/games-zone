@@ -207,7 +207,7 @@ async function fetchGames(
   return gzRequest<GameQuery, null, GZPage<Game>>({
     requestMethod: "GET",
     requestQuery: query,
-    requestPath: "/api/game/search",
+    requestPath: "/game/search",
     authToken: authToken,
   });
 }

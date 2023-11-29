@@ -4,7 +4,7 @@ import gzRequest from "@/lib/utils/gzRequest";
 export default async function addSlot(gameId: number, newSlot: Partial<Slot>, authToken?: string): Promise<GZResponse<Slot>> {
     return gzRequest<null, Partial<Slot>, Slot>({
         requestMethod: "POST",
-        requestPath: `/api/game/${gameId}/add/slot`,
+        requestPath: `/game/${gameId}/add/slot`,
         requestBoby: newSlot,
         authToken: authToken,
     });
