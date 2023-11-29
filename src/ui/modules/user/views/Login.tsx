@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ModalLayout from "@/ui/components/modal/ModalLayout";
 import Button from "@/ui/components/common/Button";
+import Link from "next/link";
 
 const Login: React.FC = () => {
+
+  const { status: authStatus } = useSession();
+
   const [credentials, setCredentials] = useState({
     userName: "",
     password: "",
@@ -57,7 +61,9 @@ const Login: React.FC = () => {
     } catch (error) {
       setErrors("Somthing went wrong !");
     } finally {
-
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   };
 
@@ -98,8 +104,14 @@ const Login: React.FC = () => {
             </Button>
             {/* <a href="#" className="text-sm hover:underline">Forgot password?</a> */}
           </div>
+          <div className="mt-4 text-sm">{errors}</div>
+          {authStatus === "authenticated" ? <div className="mt-4 text-sm">
+            Successully Logged In,
+            <br />
+            Redirecting to requested page, if not redirected <Link href={searchParams.get("callbackUrl") ?? "/"}>Click Here</Link>
+          </div>
+            : ""}
         </form>
-        <div className="text-sm">{errors}</div>
       </ModalLayout>
     </div>
   );
