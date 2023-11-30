@@ -29,27 +29,53 @@ const SlotsAvailability: React.FC<Props> = (props) => {
     dispatch({ type: "SET_QUERY", queryPaylod: { ...state.query, [event.target.name]: event.target.value } })
   };
 
-  // prettier-ignore
-  function bookSlot(slot: Slot, forDate: string): Promise<boolean> {
-    dispatch({ type: "INFO_MODAL", paylod: { message: `Submitting booking request...`, isLoading: true } });
-    // prettier-ignore
-    return bookSlotRequest({ forDate: forDate, gameId: slot.gameId, slotId: slot.slotId, userId: session?.user.userId as number }, session?.auth?.token)
-      .then((res: GZResponse<Booking>) => {
-        if (res.ok && res.result) {
-          dispatch({ type: "INFO_MODAL", paylod: { message: `Successfully submitted with id : ${res.result.bookingId}`, isLoading: false } })
-          return true
-        } else {
-          dispatch({ type: "INFO_MODAL", paylod: { message: res?.error?.errorMessage ?? "Somthing went wrong !", isLoading: false } })
-          return false
-        }
-      }).catch(err => {
-        dispatch({ type: "INFO_MODAL", paylod: { message: "Somthing went wrong !", isLoading: false } })
+  async function bookSlot(slot: Slot, forDate: string): Promise<boolean> {
+    dispatch({
+      type: "INFO_MODAL",
+      paylod: { message: `Submitting booking request...`, isLoading: true },
+    });
+
+    try {
+      const res: GZResponse<Booking> = await bookSlotRequest(
+        {
+          forDate: forDate,
+          gameId: slot.gameId,
+          slotId: slot.slotId,
+          userId: session?.user.userId as number,
+        },
+        session?.auth?.token
+      );
+
+      if (res.ok && res.result) {
+        dispatch({
+          type: "INFO_MODAL",
+          paylod: {
+            message: `Successfully submitted with id : ${res.result.bookingId}`,
+            isLoading: false,
+          },
+        });
+        return true;
+      } else {
+        dispatch({
+          type: "INFO_MODAL",
+          paylod: {
+            message: res?.error?.errorMessage ?? "Something went wrong!",
+            isLoading: false,
+          },
+        });
         return false;
-      })
+      }
+    } catch (err) {
+      dispatch({
+        type: "INFO_MODAL",
+        paylod: { message: "Something went wrong!", isLoading: false },
+      });
+      return false;
+    }
   }
 
   useEffect(() => {
-    if (authStatus === "loading") return () => { };
+    if (authStatus === "loading") return () => {};
 
     const timeOutId = setTimeout(() => {
       dispatch({ type: "LOADING", paylod: true });
@@ -78,7 +104,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
         }, 150);
       });
 
-    return () => { };
+    return () => {};
   }, [state.query, authStatus]);
 
   return (
@@ -103,7 +129,7 @@ const SlotsAvailability: React.FC<Props> = (props) => {
             <SlotLocation location={location} key={uuidv4()}>
               {Object.values(state.slotsRecord)[index]?.map((saRecord) => {
                 return (
-                  <SlotCard handleClick={bookSlot} key={uuidv4()} slotRecord={saRecord}
+                  <SlotCard handleBook={bookSlot} key={uuidv4()} slotRecord={saRecord}
                   />
                 );
               })}
